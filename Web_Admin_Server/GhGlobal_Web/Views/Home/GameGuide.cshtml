@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "GameGuide";
+    var apiUrl = Context.Session.GetString("ApiUrl");
+}
+
+
+<div class="header guide_header">
+    <div class="top_left_null"></div>
+    <div class="top_center TopTitle">How to play</div>
+    <div class="top_right"><i class="pe-7s-close"></i></div>
+</div>
+
+<div id="guide_Container">
+    <div class="col-md-12 clearfix" id="game_guideBox_Container">
+        <div id="game_guidelist">
+            <h6 class="GameGuideNote">You can see how to select menu.</h6>
+            <div id="GameGuide">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script id="GameGuide_Tmpl" type="text/x-tmpl">
+        <div class='btn_game1' onclick="GameGuideDetail('${g_Num}')">${g_Name}<span class='arrow'>❯</span></div>
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+            jsonDataLoad();
+        })
+
+        function GameGuideDetail(nidx) {
+            location.href = "/Home/GameGuideKind?nLan=@ViewBag.nLan&nGtype=" + nidx;
+        }
+
+        function GameGuide() {
+
+            var allData = {
+                "lan_idx": "@ViewBag.nLan",
+                "sbGtype": "@ViewBag.nGtype"
+            };
+
+            $.ajax({
+                url: "@apiUrl/Home/GetGameType",
+                type: 'POST',
+                data: allData,
+                success: function (data) {
+                    if (data.length > 0) {
+                        $("#GameGuide_Tmpl").tmpl(data).appendTo("#GameGuide");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("GameGuide Error \n" + textStatus + " : " + errorThrown)
+                }
+            });
+        }
+
+        function jsonDataLoad() {
+            $.ajax({
+                url: "/Cmd/GetJsonRead",
+                type: 'POST',
+                data: { "filePath": "JsonData", "fileName": "gGameGuide.json", "nLan": "@ViewBag.nLan" },
+                success: function (data) {
+                    if (data.length > 0) {
+                        $(".TopTitle").text(data[0].TopTitle);
+                        $(".GameGuideNote").text(data[0].GameGuideNote);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("JsonData Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                },
+                complete: function () {
+                    GameGuide();
+                }
+            });
+        }
+    </script>
+}
+
+

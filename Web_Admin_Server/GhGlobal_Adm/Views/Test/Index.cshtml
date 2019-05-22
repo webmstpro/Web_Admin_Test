@@ -1,0 +1,297 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutTest.cshtml";
+    ViewData["Title"] = "Index";
+}
+
+
+<style>
+
+    img {
+        width: 50px;
+        margin: 5px;
+        padding: 2px;
+    }
+
+    #Card_Container div {
+        display: inline-block;
+    }
+
+    /*#User_Container div {
+        display: inline-block;
+    }*/
+
+    .choice {
+        border: 1px dotted red;
+    }
+
+    .choiceReady {
+        border: 1px solid blue;
+    }
+
+    .UserCard {
+        display: inline-block;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                홀덤 패 셋팅: 현재 설정 상태 <span id="SettingState"></span>
+            </div>
+            <div class="panel-body">
+                <div class="col-lg-5">
+                    <form method="post" id="holdemForm" name="holdemForm">
+                        <input type="hidden" name="gNum" id="gNum" value="1" />
+                        <input type="hidden" name="Rand" id="Rand" value="0" />
+                        <div id="User_Container">
+                            @*@{
+                                for (var i = 1; i < 10; i += 2)
+                                {
+                                    var img = i + ".png";
+                                    var img1 = i + 1 + ".png";
+                                    <div class="UserCard">
+                                        유저
+                                        <input type="hidden" name="User" id="User_@i" value="@i" />
+                                        <input type="hidden" name="User" id="User_@(i+1)" value="@(i+1)" />
+                                        <img src="~/images/@img" class="UserImg" idx="@i" UserIdx="@i" />
+                                        <img src="~/images/@img1" class="UserImg" idx="@(i+1)" UserIdx="@(i+1)" />
+                                    </div>
+                                }
+                            }
+                            <div class="DealerCard">
+                                딜러
+                                @{
+                                    for (var i = 11; i < 16; i++)
+                                    {
+                                        var img = i + ".png";
+                                        <input type="hidden" name="User" id="User_@i" value="@i" />
+                                        <img src="~/images/@img" class="UserImg" idx="@i" UserIdx="@i" alt="@i" />
+                                    }
+                                }
+                            </div>*@
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-7">
+                    <div id="Card_Container">
+                        @{
+                            for (var j = 1; j <= 52; j++)
+                            {
+                                var img = j + ".png";
+                                <div><img src="~/images/@img" alt="@j" class="cardImg" id="img_@j" idx="@j" /> </div>
+
+                                if (j % 13 == 0)
+                                {
+                                    <br />
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="btn btn-success" id="btnSubmit">저장</div>
+                <div class="btn btn-danger" id="btnRand">랜덤</div>
+                <div class="btn btn-warning" id="btnReset">리셋</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script id="UserCards_Tmpl" type="text/x-tmpl">
+    <div class="UserCard">
+
+        {{if userCard < 18}}
+        {{if (userCard % 2) == 0}}
+        유저
+        {{/if}}
+        {{else}}
+        {{if (userCard % 18) == 0}}
+        딜러
+        {{/if}}
+        {{/if}}
+
+        <input type="hidden" name="User" id="User_${userCard}" value="${card}" />
+        <img src="/images/${card}.png" class="UserImg" idx="${card}" UserIdx="${userCard}" />
+    </div>
+    {{if (userCard % 2) == 1 && userCard < 18}}
+    <br />
+    {{/if}}
+</script>
+
+    <script>
+        $(function () {
+            //imgchoiceSet();
+            cardList($("#gNum").val());
+        });
+
+        function cardList(gNum) {
+            //GetCardList
+            $.ajax({
+                url: "@ViewBag.ApiUrl/CardSet/GetCardList",
+                type: 'POST',
+                data: { "gNum": gNum},
+                success: function (data) {
+                    console.log(data);
+                    if (data.length == 0) {
+                        console.log("없다면");
+                    } else {
+
+                        $(data).each(function (key, value) {
+                            if (key == 0) {
+                                if (value.rand == 0) {
+                                    $("#SettingState").text("[ 패 셋팅 ]");
+                                } else {
+                                    $("#SettingState").text("[ 랜덤 셋팅 ]");
+                                }
+                            }
+                        });
+
+                        $("#User_Container").text("");
+                        $("#UserCards_Tmpl").tmpl(data).appendTo("#User_Container");
+                    }
+                    imgchoiceSet();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("패설정 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log(jqXHR);
+                }
+            });
+        }
+
+        $(document).on("click", "#btnRand", function () {
+            $("#Rand").val(1);
+            formSubmit();
+        });
+
+        $(document).on("click", "#btnSubmit", function () {
+            $("#Rand").val(0);
+            formSubmit();
+        });
+
+        function formSubmit() {
+            $.ajax({
+                url: "@ViewBag.ApiUrl/CardSet/SetHoldem",
+                type: 'POST',
+                data: $("#holdemForm").serialize(),
+                success: function (data) {
+                    console.log(data);
+                    alert(data.rVal);
+                    location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("패설정 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                }
+            });
+        }
+
+        $(document).on("click", "#btnReset", function () {
+            location.reload();
+        });
+
+        $(document).on("click", ".cardImg", function () {
+            if ($(this).hasClass("choice")) {
+                alert("이미 선택된 카드 입니다.")
+            } else {
+                if ($(this).hasClass("choiceReady")) {
+                    $(this).removeClass("choiceReady");
+                } else {
+                    $(".cardImg").each(function () {
+                        $(this).removeClass("choiceReady");
+                    })
+                    $(this).addClass("choiceReady");
+                    imgChange();
+                }
+            }
+        });
+
+        $(document).on("click", ".UserImg", function () {
+            if ($(this).hasClass("choiceReady")) {
+                $(this).removeClass("choiceReady");
+            } else {
+                $(".UserImg").each(function () {
+                    $(this).removeClass("choiceReady");
+                })
+                $(this).addClass("choiceReady");
+                imgChange();
+            }
+        });
+
+        function imgChange() {
+            UserCard = 0;
+            UserIdx = 0;
+            cardImg = 0;
+
+            // 유저 이미지 선택 체크
+            $(".UserImg").each(function () {
+                if ($(this).hasClass("choiceReady")) {
+                    UserCard = $(this).attr("idx");
+                    UserIdx = $(this).attr("UserIdx");
+                }
+            });
+
+            // 이미지 선택 체크
+            $(".cardImg").each(function () {
+                if ($(this).hasClass("choiceReady")) {
+                    cardImg = $(this).attr("idx");
+                }
+            });
+
+            if (UserCard != 0 && cardImg != 0) {
+                console.log("두개가 다 있다면 서로 카드를 교환하자");
+                // 유저카드 변경
+                imgSet(0, cardImg, UserIdx);
+            }
+
+            //console.log("유저카드" + UserCard + "/ 이미지카드" + cardImg);
+        }
+
+        function imgSet(nType, Idx, UserIdx) {
+            // 유저 이미지 변경
+            if (nType == 0) {
+                $(".UserImg").each(function () {
+                    if ($(this).hasClass("choiceReady")) {
+                        $(this).attr("src", "/images/" + Idx + ".png");
+                        $(this).attr("idx", Idx);
+                        $("#User_" + UserIdx).val(Idx);
+                    }
+                });
+            }
+            // 카드 이미지 변경
+            else
+            {
+                $(".cardImg").each(function () {
+                    if ($(this).hasClass("choiceReady")) {
+                        cardImg = $(this).attr("idx");
+                    }
+                });
+            }
+
+            imgchoiceSet();
+        }
+
+
+        function imgchoiceSet() {
+            $(".UserImg").each(function () {
+                $(this).removeClass("choiceReady");
+            });
+
+            $(".cardImg").each(function () {
+                $(this).removeClass("choiceReady");
+                $(this).removeClass("choice");
+            });
+
+            $("input[name=User]").each(function () {
+                //$("#img_" + $(this).val()).css("filter", "grayscale(100%)"); 필터효과
+                $("#img_" + $(this).val()).addClass("choice");
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,67 @@
+[{
+        "Language": "KOR",
+        "data": [{
+            "TopTitle": "플레이카지노",
+            "Input_UserId": "아이디",
+            "InputErr_UserId": "아이디를 입력하세요.",
+            "Input_UserPwd": "비밀번호",
+            "InputErr_UserPwd": "비밀번호를 입력하세요.",
+            "Input_Email": "이메일",
+            "InputErr_Email": "이메일을 입력해주세요.",
+            "Btn_Submit": "로그인",
+            "Link_IdFind": "아이디 찾기",
+            "Link_PwFind": "비밀번호 찾기",
+            "Btn_Join": "회원가입"
+        }]
+    },
+    {
+        "Language": "USA",
+      "data": [
+        {
+          "TopTitle": "Play Casino",
+          "Input_UserId": "ID",
+          "InputErr_UserId": "Please, input user ID.",
+          "Input_UserPwd": "PassWord",
+          "InputErr_UserPwd": "Please, input Password.",
+          "Input_Email": "Email",
+          "InputErr_Email": "Please, input Email address.",
+          "Btn_Submit": "Sign In",
+          "Link_IdFind": "Find ID",
+          "Link_PwFind": "Find PassWord",
+          "Btn_Join": "Join Membership"
+        }
+      ]
+    },
+    {
+        "Language": "JPN",
+        "data": [{
+            "TopTitle": "プレイカジノ",
+            "Input_UserId": "ユーザ名",
+            "InputErr_UserId": "IDを入力してください。",
+            "Input_UserPwd": "パスワード",
+            "InputErr_UserPwd": "パスワードを入力してください。",
+            "Input_Email": "メール",
+            "InputErr_Email": "メールアドレスを入力してください。",
+            "Btn_Submit": "ログイン",
+            "Link_IdFind": "ユーザ名検索",
+            "Link_PwFind": "パスワードを忘れた",
+            "Btn_Join": "会員登録"
+        }]
+    },
+    {
+        "Language": "CHN",
+        "data": [{
+            "TopTitle": "玩赌场",
+            "Input_UserId": "用户名",
+            "InputErr_UserId": "请输入您的ID。",
+            "Input_UserPwd": "密码",
+            "InputErr_UserPwd": "请输入您的密码",
+            "Input_Email": "电子邮件",
+            "InputErr_Email": "请输入您的电子邮件。",
+            "Btn_Submit": "注册",
+            "Link_IdFind": "查找ID",
+            "Link_PwFind": "找到密码",
+            "Btn_Join": "报名"
+        }]
+    }
+]

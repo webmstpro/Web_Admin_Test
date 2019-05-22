@@ -1,0 +1,97 @@
+[{
+        "Language": "KOR",
+        "data": [{
+            "TopTitle": "플레이카지노 회원가입",
+            "Input_UserId": "아이디",
+            "InputErr_UserId": "아이디를 입력하세요.",
+            "InputErr_UserIdCheck": "아이디 체크를 진행해 주세요.",
+            "Input_UserPwd": "비밀번호",
+            "InputErr_UserPwd": "비밀번호를 입력하세요.",
+            "Input_UserPwdCom": "비밀번호 확인",
+            "InputErr_UserPwdCom": "비밀번호 확인을 입력하세요.",
+            "InputErr_UserPwdCompare": "비밀번호가 일치하지 않습니다.",
+            "Input_Email": "이메일",
+            "InputErr_Email": "이메일을 입력해주세요.",
+            "Btn_Submit": "회원가입",
+            "Btn_Cancel": "취소",
+            "Btn_IdCheck": "아이디 체크",
+
+            "alert_cancel": "회원가입을 취소하시겠습니까?\n로그인페이지로 이동합니다.",
+            "alert_idvalidation": "ID는 4 ~ 15 자의 영문자와 숫자 여야합니다. 첫 글자 영어가 있어야합니다.",
+            "alert_pwvalidation": "비밀번호는 영문 4~15 자의 조합이어야합니다. 첫 번째 문자는 대문자이어야합니다.",
+            "alert_forbiddenword": "는(은) 입력할 수 없는 단어입니다."
+        }]
+    },
+    {
+        "Language": "USA",
+        "data": [{
+            "TopTitle": "Join Play Casino Membership",
+            "Input_UserId": "ID",
+            "InputErr_UserId": "Please enter your ID",
+            "InputErr_UserIdCheck": "Please, check ID.",
+            "Input_UserPwd": "password",
+            "InputErr_UserPwd": "Please enter password.",
+            "Input_UserPwdCom": "Confirm Password",
+            "InputErr_UserPwdCom": "Please confirm your password.",
+            "InputErr_UserPwdCompare": "Wrong password. enter a valld password",
+            "Input_Email": "Email",
+            "InputErr_Email": "Please enter your Email address.",
+            "Btn_Submit": "Sign Up",
+            "Btn_Cancel": "Cancel",
+            "Btn_IdCheck": "ID Check",
+
+            "alert_cancel": "Do you want to quit joining membership?\nGo to the login page.",
+            "alert_idvalidation": "ID should be a combination of 4~15 English letters and numbers. First letter should be capitalized.",
+            "alert_pwvalidation": "Password should be a combination of 4~15 English letters and numbers. First letter should be capitalized.",
+            "alert_forbiddenword": "is a unavailable word."
+        }]
+    },
+    {
+        "Language": "JPN",
+        "data": [{
+            "TopTitle": "プレイカジノ会員登録",
+            "Input_UserId": "ユーザ名",
+            "InputErr_UserId": "IDを入力してください。",
+            "InputErr_UserIdCheck": "名チェックを進めてください。",
+            "Input_UserPwd": "パスワード",
+            "InputErr_UserPwd": "パスワードを入力してください。",
+            "Input_UserPwdCom": "パスワードの確認",
+            "InputErr_UserPwdCom": "パスワードの確認を入力してください。",
+            "InputErr_UserPwdCompare": "パスワードが一致しません。",
+            "Input_Email": "メール",
+            "InputErr_Email": "メールアドレスを入力してください。",
+            "Btn_Submit": "会員登録",
+            "Btn_Cancel": "キャンセル",
+            "Btn_IdCheck": "ユーザ名チェック",
+
+            "alert_cancel": "メンバーシップをキャンセルしてもよろしいですか？\nログインページに移動してください。",
+            "alert_idvalidation": "ID should be a combination of 4~15 English letters and numbers. First letter should be capitalized.",
+            "alert_pwvalidation": "Password should be a combination of 4~15 English letters and numbers. First letter should be capitalized.",
+            "alert_forbiddenword": "あなたが入力できない言葉です。"
+        }]
+    },
+    {
+        "Language": "CHN",
+        "data": [{
+            "TopTitle": "玩赌场会员",
+            "Input_UserId": "用户名",
+            "InputErr_UserId": "请输入您的ID。",
+            "InputErr_UserIdCheck": "请继续进行身份证检查。",
+            "Input_UserPwd": "密码",
+            "InputErr_UserPwd": "请输入您的密码",
+            "Input_UserPwdCom": "确认密码",
+            "InputErr_UserPwdCom": "请输入密码验证。",
+            "InputErr_UserPwdCompare": "密码不匹配。",
+            "Input_Email": "电子邮件",
+            "InputErr_Email": "请输入您的电子邮件。",
+            "Btn_Submit": "报名",
+            "Btn_Cancel": "取消",
+            "Btn_IdCheck": "身份证检查",
+
+            "alert_cancel": "您确定要取消会员资格吗？\n请转到登录页面。",
+            "alert_idvalidation": "ID should be a combination of 4~15 English letters and numbers. First letter should be capitalized.",
+            "alert_pwvalidation": "Password should be a combination of 4~15 English letters and numbers. First letter should be capitalized.",
+            "alert_forbiddenword": "是一个你无法进入的词。"
+        }]
+    }
+]

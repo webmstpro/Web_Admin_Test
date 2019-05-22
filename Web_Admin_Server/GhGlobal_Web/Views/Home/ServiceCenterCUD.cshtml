@@ -1,0 +1,373 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "ServiceCenterCUD";
+
+    var apiUrl = Context.Session.GetString("ApiUrl");
+}
+
+<style>
+    #sb_answerDiv {
+        display: none;
+    }
+</style>
+
+@*// 로딩 화면 *@
+<style type="text/css">
+    #load {
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        position: fixed;
+        display: none;
+        opacity: 0.8;
+        background: #000;
+        z-index: 10000;
+        text-align: center;
+    }
+
+        #load > div {
+            position: absolute;
+            top: 35%;
+            left: 35%;
+            z-index: 100;
+            color: #fff;
+        }
+</style>
+
+<div id="load">
+    <div>Loding.....</div>
+</div>
+
+<script>
+    function loadOut() {
+        var timer = setInterval(function () {
+            $("#load").hide();
+        }, 300);
+    }
+</script>
+
+<div class="header seView_header">
+    <div class="top_left"><i class="pe-7s-angle-left"></i></div>
+    <div class="top_center TopTitle">Write your inquiry</div>
+    <div class="top_right"><i class="pe-7s-close"></i></div>
+</div>
+
+<input type="hidden" name="sb_idx" id="sb_idx" value="@ViewBag.sb_idx" readonly="" />
+<input type="hidden" name="nGtype" id="nGtype" value="@ViewBag.nGtype" readonly="" />
+<input type="hidden" name="Referer" id="Referer" value="@ViewBag.Referer" readonly="" />
+
+<div class="col-md-12 seViewBox">
+    <form id="SeviceForm" name="SeviceForm">
+        <div class="row" id="JoinContainer">
+            <div class="col-md-12" id="sb_UserIDBox">
+                <input type="text" id="sb_UserID" name="sb_UserID" class="form-control" value="@ViewBag.sb_UserID" placeholder="name" data-rule-required="true" data-msg-required="Please enter a name." />
+            </div>
+            <div class="col-md-12">
+                <input type="text" id="sb_Udate" name="sb_Udate" class="form-control" readonly="readonly" placeholder="Date" value="@apiUrl" />
+            </div>
+            <input type="hidden" id="sb_gtype" name="sb_gtype" value="@ViewBag.nGtype" readonly="" />
+            <div class="col-md-12">
+                <select class="form-control" id="sb_qtype" name="sb_qtype" data-rule-required="true" data-msg-required="Please select a contact category.">
+                    <option value="">-- Contact Classification --</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <input type="email" id="sb_Email" name="sb_Email" class="form-control" placeholder="Email" data-rule-email="true" data-rule-required="true" data-msg-required="Please enter your email." />
+            </div>
+            <div class="col-md-12">
+                <input type="tel" id="sb_Phone" name="sb_Phone" class="form-control" placeholder="Phone number" data-rule-phoneCh="true" data-rule-required="true" data-msg-required="Please enter your phone number." maxlength="13" />
+            </div>
+            <div class="col-md-12">
+                @*<label> 상태</label>*@
+                <input type="hidden" id="sb_use" name="sb_use" readonly="readonly" />
+                @*<select class="form-control" id="sb_use" name="sb_use" disabled="">
+                    <option value="0">Wait</option>
+                    <option value="1">Delete</option>
+                    <option value="2">Complate</option>
+                    <option value="3">AdminDelete</option>
+                </select>*@
+            </div>
+            <div class="col-md-12">
+                <textarea class="form-control" id="sb_content" name="sb_content" style="width: 100%; height: 200px; resize: none;" placeholder="Contents" data-rule-required="true" data-msg-required="Please enter your content."></textarea>
+            </div>
+            <div class="col-md-12" id="sb_answerDiv">
+                <textarea class="form-control" id="sb_answer" name="sb_answer" style="width: 100%; height: 200px; resize: none;" disabled="disabled"></textarea>
+            </div>
+            @{
+                //if (ViewBag.conType == "R")
+                if (ViewBag.sb_idx != 0)
+                {
+                    <br />
+                    <div class="col-md-12">
+                        <div class="btn seEditBtn CreateBtn" conType="0">Modified</div>
+                        <div class="btn seDelBtn CreateBtn" conType="1">Delete</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-12">
+                        <div id="Input_Term01" style="background-color: #fff; color: #14b043; width: 100%; border-radius:5px 5px 0 0; padding-left: 10px; font-size: 15px; font-weight: bold; height: 30px; line-height: 30px;">Acquisition of personal information</div>
+                        <div style="background-color: #fff; width: 100%; height: auto; padding: 5px; resize: none;" readonly="readonly">
+                            <span id="Input_Term02">- Personal information items we collect: email address, personal information exposed, author ID</span>
+                            <br />
+                            <span id="Input_Term03">- Personal information you fill out will be kept for a certain period of time to receive inquiries and resolve customer complaints.</span>
+                            <br />
+                            <span id="Input_Term04">ㅇ Consultation history: 5 years</span>
+                        </div>
+                        <div class="form-inline" style="background-color: #fff; width: 100%; border-radius: 0 0 5px 5px; padding-left: 10px; height: 30px; line-height: 30px; margin-bottom: 15px;">
+                            <label class="checkbox-inline" style="font-weight: bold;">
+                                <input type="checkbox" id="agree" value="ok" style="height: 25px;"> <span id="Input_Term05">I agree.</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="btn seCreateBtn CreateBtn" conType="0">complete</div>
+                    </div>
+                }
+                <div class="col-md-12">
+                    <div class="btn seListBtn CanCelBtn" onclick="goList();">cancel</div>
+                </div>
+                
+            }
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+        var sUserID = "@ViewBag.sUserID";
+        var sbIdx = "@ViewBag.sb_idx";
+        var lanIdx = "@ViewBag.nLan";
+
+        function dataload()
+        {
+            var allData = {
+                "lan_idx": lanIdx,
+                "sb_idx": sbIdx,
+                "sbUserID": sUserID,
+                "conType": "USER",
+            };
+
+            if (sUserID != "") {
+                $("#sb_UserID").attr("readonly", true);
+            }
+
+            $.ajax({
+                url: "@apiUrl/Home/GetServiceCenterDetail",
+                type: 'POST',
+                data: allData,
+                success: function (data) {
+                    console.log(data);
+                    if (data[0].sb_idx != "") {
+                        //console.log("상세")
+                        $(".TopTitle").text("View Inquiry Details");
+                    }
+
+                    var strDate = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
+                    if (data.length === 0) {
+                        strDate = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
+                        $("#sb_Udate").val(strDate);
+                        emailLoad();
+                    } else {
+                        strDate = moment(data[0].sb_Udate).format("YYYY-MM-DD hh:mm:ss");
+
+                        $("#sb_idx").val(data[0].sb_idx);
+                        $("#sb_UserID").val(data[0].sb_UserID);
+                        $("#sb_Udate").val(strDate);
+                        $("#sb_gtype").val(data[0].sb_gtype);
+                        $("#sb_qtype").val(data[0].sb_qtype);
+                        $("#sb_use").val(data[0].sb_use);
+                        $("#sb_content").val(data[0].sb_content);
+                        $("#sb_answer").val(data[0].sb_answer);
+
+                        $("#sb_Email").val(data[0].sb_email);
+                        $("#sb_Phone").val(data[0].sb_phone);
+
+                        if (data[0].sb_use === 2) {
+                            $("#sb_answerDiv").show();
+                            $(".seEditBtn").hide();
+                            $('input').prop('readonly', true);
+                            $('select').prop('disabled', true);
+                            $('textarea').prop('readonly', true);
+                        }
+                    }
+
+                }
+                , complete: function () {
+                    loadOut();
+                }
+                , error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Login Local Error \n" + textStatus + " : " + errorThrown);
+                }
+            });
+        }
+
+        function QuestionType() {
+            var nQtype = "@ViewBag.nQtype";
+            $.ajax({
+                url: "@apiUrl/Home/GetQuestionType",
+                type: 'POST',
+                data: { "lan_idx": lanIdx},
+                success: function (data) {
+                    if (data.length > 0) {
+                        $.each(data, function (key, state) {
+                            if (parseInt(nQtype) === parseInt(state.gqt_idx)) {
+                                $("#sb_qtype").append("<option value='" + state.gqt_idx + "' selected>" + state.gqt_memo + "</option>");
+                            } else {
+                                $("#sb_qtype").append("<option value='" + state.gqt_idx + "'>" + state.gqt_memo + "</option>");
+                            }
+                        });
+                    }
+                }
+                , complete: function () {
+                    dataload();
+                }
+                , error: function (jqXHR, textStatus, errorThrown) {
+                    alert("QuestionType Local Error \n" + textStatus + " : " + errorThrown);
+                }
+            });
+        }
+
+        function formCheck(conType)
+        {
+            if ($("#SeviceForm").valid()) {
+
+                if ("@ViewBag.conType" == "C") {
+                    if (!$('input:checkbox[id="agree"]').is(":checked")) {
+                        alert($("#alert_Term").attr("Msg"));
+                        return;
+                    }
+                }
+
+                $(".CreateBtn").hide();
+
+                var allData = {
+                    "lan_idx": lanIdx,
+                    "conType": "USER",
+                    "sbUserID": $.trim($("#sb_UserID").val()),
+                    "sb_idx": sbIdx,
+                    "sb_content": $.trim($("#sb_content").val()),
+                    "sb_use": conType,
+                    "sb_Email": $.trim($("#sb_Email").val()),
+                    "sb_Phone": $.trim($("#sb_Phone").val()),
+                    "sbGtype": "@ViewBag.nGtype",
+                    "sbQtype": $.trim($("#sb_qtype").val()),
+                
+                };
+
+                //console.log(allData)
+
+                $.ajax({
+                    url: "@apiUrl/Home/SetServiceCenterCUD",
+                    type: 'POST',
+                    data: allData,
+                    success: function (data) {
+                        alert(data.rVal);
+                        if (data.rCnt == 0) {
+                            goList();
+                        } else {
+                            $(".CreateBtn").show();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $(".CreateBtn").show();
+                        alert("ServiceCenter ADD Local Error \n" + textStatus + " : " + errorThrown);
+                    }
+                });
+            }
+        }
+
+        function goList()
+        {
+            var nGtype = $("#nGtype").val();
+            var sb_UserID = sUserID;
+            if (sb_UserID == "") {
+                Unity.closeWebView();
+            } else {
+                location.href = "/Home/ServiceCenter?sUserID=" + sb_UserID + "&nGtype=" + nGtype + "&nLan=" + lanIdx;
+            }
+        }
+
+        function emailLoad() {
+            if (sUserID != "") {
+                $.ajax({
+                    url: "@apiUrl/Home/GetMemberDetail",
+                    type: 'POST',
+                    data: { "sUserID": sUserID },
+                    success: function (data) {
+                        if (data[0].UserIdx > 0) {
+                            if (data[0].Social == 4) {
+                                $("#sb_Email").val(data[0].Email);
+                            } else {
+                                $("#sb_Email").val(data[0].UserId);
+                            }
+                            $("#sb_UserID").val(sUserID);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("UserDetail Error \n" + textStatus + " : " + errorThrown + ":" + jqXHR);
+                    }
+                });
+            }
+        }
+
+        $(document).on("click", ".CreateBtn", function () {
+            formCheck($(this).attr("conType"));
+        });
+
+        $(document).ready(function () {
+            jsonDataLoad();
+        });
+
+        function jsonDataLoad() {
+            $.ajax({
+                url: "/Cmd/GetJsonRead",
+                type: 'POST',
+                data: { "filePath": "JsonData", "fileName": "gServiceCenterCUD.json", "nLan": lanIdx},
+                success: function (data) {
+                    //console.log(data);
+                    if (data.length > 0) {
+                        $(".TopTitle").text(data[0].TopTitle_Create);
+                        $("#sb_UserID").attr("placeholder", data[0].Input_User);
+                        $("#sb_UserID").attr("data-msg-required", data[0].Input_User_Err);
+                        $("#sb_qtype").attr("placeholder", data[0].Input_Qtype);
+                        $("#sb_qtype").attr("data-msg-required", data[0].Input_Qtype_Err);
+                        $("#sb_qtype option:eq(0)").text(data[0].Input_Qtype_Err);
+                        $("#sb_Email").attr("placeholder", data[0].Input_Email);
+                        $("#sb_Email").attr("data-msg-required", data[0].Input_Email_Err);
+                        $("#sb_Phone").attr("placeholder", data[0].Input_Phone);
+                        $("#sb_Phone").attr("data-msg-required", data[0].Input_Phone_Err);
+                        $("#sb_content").attr("placeholder", data[0].Input_Content);
+                        $("#sb_content").attr("data-msg-required", data[0].Input_Content_Err);
+                        $(".seEditBtn").text(data[0].Btn_View);
+                        $(".seDelBtn").text(data[0].Btn_Del);
+                        $(".seCreateBtn").text(data[0].Btn_Create);
+                        $(".seListBtn").text(data[0].Btn_Cancel);
+                        //$("#agree").attr("placeholder", data[0].Input_Term_Err);
+                        //$("#agree").attr("data-msg-required", data[0].Input_Term_Err);
+                        $("#Input_Term01").text(data[0].Input_Term01);
+                        $("#Input_Term02").text(data[0].Input_Term02);
+                        $("#Input_Term03").text(data[0].Input_Term03);
+                        $("#Input_Term04").text(data[0].Input_Term04);
+                        $("#Input_Term05").text(data[0].Input_Term05);
+                        $("#alert_Del").attr("Msg", data[0].alert_Del)
+                        $("#alert_Term").attr("Msg", data[0].Input_Term_Err)
+                        //Input_Term_Err
+
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Login Temp Data Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                },
+                complete: function () {
+                    QuestionType(); // 문의 분류
+                }
+            });
+        }
+    </script>
+}
+<div style="display: none;">
+    <span id="alert_Del" Msg=""></span>
+    <span id="alert_Term" Msg=""></span>
+</div>

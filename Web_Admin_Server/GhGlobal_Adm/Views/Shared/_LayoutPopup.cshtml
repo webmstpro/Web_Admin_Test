@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@*// 일반 알림 팝업*@
+<div class="modal fade" id="PopupManage01" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel">
+                <div class="panel-heading" id="PopupManage01_heading"></div>
+                <div class="panel-body" id="PopupManage01_body"></div>
+                <div class="panel-footer" id="PopupManage01_footer">
+                    <div class="btn btn-warning" id="btnPopup01" data-dismiss="modal">취소</div>
+                    <div class="btn btn-default" id="btnPopup02">확인</div>
+                </div>
+            </div>
+            @*<div class="popupIcon"><img src="~/img/icon/fail.svg" class="errIcon" /></div>
+            <div class="pupupContent">
+                <div class="pupupTitle">닉네임 중복확인</div>
+                <div class="pupupErrObj">픽스터킹</div>
+
+                <div class="pupupErrText">은 이미 사용중인 닉네임 입니다.</div>
+                <div class="pupupLine">&nbsp;</div>
+                <div class="pupupBtn">
+                    <span class="pupupBtn2" data-dismiss="modal">취소</span>
+                    <span class="pupupBtn1">확인</span>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="popupPost" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="popPost_Container">
+                <div class="popPost_top">
+                    <div class="popPost_top_date">
+                        <div class="popPost_top_date_day">18.09.09</div>
+                        <div class="popPost_top_date_hour">PM 13:44</div>
+                    </div>
+                    <div class="popPost_top_nick">[닉네임]</div>
+
+                </div>
+                <div class="popPost_top_title">제목이 길어진다면... 이 아닌 내용이 조금 아래로 내려 가도록 할 것입니다.</div>
+                <div class="popPost_top_content">내용</div>
+
+                <div class="popPost_btn_Container">
+                    <span class="pupupBtn3" data-dismiss="modal">확인</span>
+                    <span class="pupupBtn2">답장</span>
+                    <span class="pupupBtn1">삭제</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

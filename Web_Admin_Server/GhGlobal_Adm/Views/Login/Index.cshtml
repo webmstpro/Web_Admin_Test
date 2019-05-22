@@ -1,0 +1,62 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<style>
+    .loginTitle {
+        font-size: 3em;
+        font-weight: bold;
+        height: 50px;
+    }
+</style>
+
+<div class="row" id="pwd-container">
+    <div class="col-md-4"></div>
+
+    <div class="col-md-4">
+        <section class="login-form">
+            <form name="LoginForm" id="LoginForm" method="post" action="#">
+                <span class="loginTitle">Global Casino Manage @Context.Session.GetInt32("ad_idx")</span>
+                <input type="text" name="ad_id" id="ad_id" placeholder="id" required class="form-control input-lg" data-msg-required="아이디를 입력해주세요." />
+                <input type="password" name="ad_pw" id="ad_pw" placeholder="Password" required class="form-control input-lg" data-msg-required="비밀번호를 입력해주세요." />
+                <div class="btn btn-lg btn-primary btn-block" id="loginSubmit">Sign In</div>
+                @*<button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>*@
+            </form>
+        </section>
+    </div>
+
+    <div class="col-md-4"></div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $("#loginSubmit").click(function () {
+                if ($("#LoginForm").valid()) {
+
+                    $.ajax({
+                        url: "/Cmd/SetAdLogin",
+                        //url: "@ViewBag.ApiUrl/Manage/SetAdLogin",
+                        type: 'POST',
+                        data: $("#LoginForm").serialize(),
+                        success: function (data) {
+                            console.log(data);
+                            alert(data.rVal);
+                            if (data.rCnt == 0) {
+                                location.href = "/Home/Index";
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Login Local Error \n" + textStatus + " : " + errorThrown + ":" + jqXHR);
+                            console.log(textStatus);
+                            console.log(errorThrown);
+                            console.log(jqXHR);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

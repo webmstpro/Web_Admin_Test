@@ -1,0 +1,75 @@
+[{
+        "Language": "KOR",
+        "data": [{
+            "TopTitle": "고객센터",
+            "NoticeTitle": "공지사항",
+            "NoticeTitle_Empty": "등록된 공지사항이 없습니다. ",
+            "FaqTitle": "자주묻는질문",
+            "FaqTitle_Empty": "등록된 자주묻는질문이 없습니다.",
+            "QutstionTitle": "문의",
+            "BtnQutstion1": "게임관련문의",
+            "BtnQutstion2": "결제관련문의",
+            "BtnQutstion3": "설치/실행문의",
+            "BtnQutstion4": "개인정보문의",
+            "BtnQutstion5": "신고/이용제한",
+            "BtnQutstion6": "기타문의",
+            "BtnQutstion0": "나의 문의내역"
+        }]
+    },
+    {
+        "Language": "USA",
+      "data": [
+        {
+          "TopTitle": "Service center",
+          "NoticeTitle": "Notice",
+          "NoticeTitle_Empty": "There are no registered announcements.",
+          "FaqTitle": "Frequently Asked Questions",
+          "FaqTitle_Empty": "FAQ",
+          "QutstionTitle": "Inquiries",
+          "BtnQutstion1": "Game Related Inquiries",
+          "BtnQutstion2": "Payment Inquiries",
+          "BtnQutstion3": "Installation / Execution Inquiries",
+          "BtnQutstion4": "Privacy Inquiries",
+          "BtnQutstion5": "User Report / Restriction",
+          "BtnQutstion6": "Other Inquiries",
+          "BtnQutstion0": "My inquiries"
+        }
+      ]
+    },
+    {
+        "Language": "JPN",
+        "data": [{
+            "TopTitle": "サービスセンター",
+            "NoticeTitle": "通知",
+            "NoticeTitle_Empty": "登録されたお知らせはありません。",
+            "FaqTitle": "よくある質問",
+            "FaqTitle_Empty": "登録されたFAQはありません。",
+            "QutstionTitle": "質問",
+            "BtnQutstion1": "ゲーム関連のお問い合わせ",
+            "BtnQutstion2": "お支払いのお問い合わせ",
+            "BtnQutstion3": "インストール/実行のお問い合わせ",
+            "BtnQutstion4": "お問い合わせ",
+            "BtnQutstion5": "レポート/制限",
+            "BtnQutstion6": "その他のお問い合わせ",
+            "BtnQutstion0": "私のお問い合わせ履歴"
+        }]
+    },
+    {
+        "Language": "CHN",
+        "data": [{
+            "TopTitle": "服务中心",
+            "NoticeTitle": "注意",
+            "NoticeTitle_Empty": "没有注册公告。",
+            "FaqTitle": "经常问的问题",
+            "FaqTitle_Empty": "没有注册常见问题。",
+            "QutstionTitle": "题",
+            "BtnQutstion1": "游戏相关查询",
+            "BtnQutstion2": "付款查询",
+            "BtnQutstion3": "安装/执行查询",
+            "BtnQutstion4": "联系我们",
+            "BtnQutstion5": "报告/限制",
+            "BtnQutstion6": "其他询问",
+            "BtnQutstion0": "我的询问历史"
+        }]
+    }
+]

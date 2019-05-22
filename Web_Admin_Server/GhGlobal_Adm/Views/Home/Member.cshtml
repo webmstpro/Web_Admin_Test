@@ -1,0 +1,202 @@
+﻿
+@{
+    ViewData["Title"] = "Member";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-list"></span>멤버 리스트
+                <div class="pull-right action-buttons">
+                    <div class="form-inline">
+                        <select class="form-control" name="sKey" id="sKey">
+                            <option value="">전체</option>
+                            <option value="UserID">아이디</option>
+                            <option value="Nick">닉네임</option>
+                            <option value="Email">이메일</option>
+                        </select>
+                        <input class="form-control" type="text" name="sVal" id="sVal" value="" placeholder="검색어를 입력하세요." />
+                        <div class="btn btn-success" id="btnSearch">검색</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>기본키</td>
+                            <td>아이디</td>
+                            <td>닉네임</td>
+                            <td>Email</td>
+                            <td>Money</td>
+                            <td>가입일</td>
+                            <td>비고</td>
+                        </tr>
+                    </thead>
+                    <tbody id="List_Container"></tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>
+                            Total Count <span class="label label-info" id="Total">0</span>
+                        </h6>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="pagination pagination-sm pull-right" id="pageing">
+                            <li class="disabled"><a href="#">«</a></li>
+                            <li><a href="#">0</a></li>
+                            <li class="disabled"><a href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script id="UserCards_Tmpl" type="text/x-tmpl">
+    <tr>
+        <td>${UserIdx}</td>
+        <td>${UserID}</td>
+        <td>${Nick}</td>
+        <td>${Email}</td>
+        <td>${nCommas(Money)}</td>
+        <td>${GetDate01(RegDate)}</td>
+        <td>
+            <div class="btn btn-xs btn-danger" onclick="memDel('${UserIdx}', this)">삭제</div>
+            {{if Block == 0}}
+            <div class="btn btn-xs btn-success" onclick="memBlock('${UserIdx}',this )" nBlock="${Block}">블럭</div>
+            {{else}}
+            <div class="btn btn-xs btn-warning" onclick="memBlock('${UserIdx}',this )" nBlock="${Block}">해제</div>
+            {{/if}}
+            <div class="btn btn-xs btn-primary" onclick="memPush('${UserIdx}')">푸시</div>
+        </td>
+    </tr>
+</script>
+
+
+<script id="UserCardsEmpty_Tmpl" type="text/x-tmpl">
+    <tr>
+        <td colspan="7">유저가 존재하지 않습니다.</td>
+    </tr>
+</script>
+
+    <script>
+        var PageSize = 20;
+        var PageRow = 10;
+
+        $(function () {
+            List(1);
+        });
+
+        $(document).on("click", "#btnSearch", function () {
+            List(1);
+        });
+
+        function List(PageNo) {
+
+            pData = {
+                "PageSize": PageSize,
+                "PageNo": PageNo,
+                "sKey": $("#sKey").val(),
+                "sVal": $("#sVal").val()
+            }
+
+            $.ajax({
+                url: "@ViewBag.ApiUrl/Manage/GetMemList",
+                type: 'POST',
+                data: pData,
+                success: function (data) {
+                    console.log(data.item1)
+                    $("#List_Container").text("");
+                    if (data.item2 == 0) {
+                        $("#UserCardsEmpty_Tmpl").tmpl().appendTo("#List_Container");
+                    } else {
+                        $("#UserCards_Tmpl").tmpl(data.item1).appendTo("#List_Container");
+                        $("#Total").text(data.item2);
+                        var page_viewList = Paging(data.item2, PageSize, PageRow, PageNo, "List");
+                        $("#pageing").empty().html(page_viewList);
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("유저 리스트 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                }
+            });
+        }
+
+        goPaging_List = function (PageNo) {
+            List(PageNo);
+        }
+
+        function memDel(idx, obj) {
+            if (confirm("삭제하시겠습니까?\n삭제후 복원 불가합니다.")) {
+                $.ajax({
+                    url: "/Cmd/SetMemDel",
+                    type: 'POST',
+                    data: { "UserIdx": idx},
+                    success: function (data) {
+                        alert(data.rVal);
+                        if (data.rCnt == 0) {
+                            $(obj).parent().parent().remove();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("유저 리스트 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                    }
+                });
+            }
+        }
+
+        function memBlock(idx, obj) {
+
+            var block = $(obj).attr("nBlock");
+            var sBlock = "";
+            var nBlock = 0;
+
+            if (block == 0) {
+                sBlock = "블럭";
+                nBlock = 1;
+            } else {
+                sBlock = "블럭해제";
+                nBlock = 0;
+            }
+
+            if (confirm(sBlock + "처리를 하시겠습니까?")) {
+                $.ajax({
+                    url: "@ViewBag.ApiUrl/Manage/SetMemBlock",
+                    type: 'POST',
+                    data: { "UserIdx": idx, "nBlock": nBlock, "sBlock": sBlock },
+                    success: function (data) {
+                        alert(data.rVal);
+                        if (data.rCnt == 0) {
+                            if (block == 0) {
+                                $(obj).removeClass("btn-success");
+                                $(obj).addClass("btn-warning");
+                                $(obj).text("해제");
+                            } else {
+                                $(obj).removeClass("btn-warning");
+                                $(obj).addClass("btn-success");
+                                $(obj).text("블럭");
+                            }
+                            $(obj).attr("nBlock", nBlock);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("유저 리스트 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                    }
+                });
+            }
+        }
+
+        //SetMemBlock
+
+    </script>
+}
+
+

@@ -1,0 +1,759 @@
+﻿/*Body*/
+body {
+    background: #333333;
+}
+
+.table-responsive {
+    background-color: #fff;
+}
+
+
+input {
+    height: 50px;
+}
+
+select {
+    width: 100%;
+    height: 42px;
+    background: #ffd650;
+    border-radius: 4px;
+    border: 2px solid #ffd650;
+    color: #333;
+    font-weight: bold;
+}
+
+.select-options {
+    background: #333;
+}
+
+/* Btn */
+
+.btnLoginGo {
+    background-color: #46aa54;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .btnLoginGo:hover {
+        background-color: #46aa54;
+        color: #fff;
+    }
+/*Top header*/
+.header {
+    text-align: center;
+    line-height: 50px;
+    font-size: 1.5em;
+    width: 100%;
+}
+
+    .header > div {
+        display: inline-block;
+    }
+
+.top_left {
+    font-weight: bold;
+    width: 10%;
+}
+
+    .top_left img {
+        width: 34px;
+    }
+
+.top_left_null {
+    font-weight: bold;
+    width: 10%;
+}
+
+.top_center {
+    height: 30px;
+    line-height: 30px;
+    width: 75%;
+    font-weight: bold;
+}
+
+.top_right {
+    width: 10%;
+    font-weight: bold;
+}
+
+    .top_right img {
+        width: 32px;
+        color: #efefef;
+    }
+/*login*/
+.login_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+.login_content {
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+    .login_content div {
+        padding-top: 10px;
+    }
+
+    .login_content input {
+        height: 34px;
+    }
+
+.btnLogin {
+    background-color: #FFD650;
+    height: 40px;
+    line-height: 23px;
+    border: 0;
+    width: 100%;
+    color: #333;
+    font-weight: bold;
+}
+
+    .btnLogin:hover {
+        background-color: #FFD650;
+        color: #00509F;
+        font-weight: bold;
+    }
+
+.btnJoinGo {
+    border: 0;
+    color: #eee;
+    font-weight: bold;
+}
+
+    .btnJoinGo:hover {
+        background-color: #00509F;
+        color: #fff;
+        font-weight: bold;
+    }
+
+
+.log_homebtn {
+    background-color: #46aa54;
+    border: 0;
+    width: 100%;
+    margin-top: 10px;
+}
+
+    .log_homebtn a {
+        color: #fff;
+    }
+
+.login_fine {
+    color: #868686;
+    margin: 0;
+    padding: 0;
+}
+
+    .login_fine a {
+        color: #868686;
+        font-weight: bold;
+    }
+
+
+/*find*/
+.find_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+.find_content {
+    padding-top: 20px;
+    height: auto;
+}
+
+    .find_content div {
+        padding-top: 10px;
+    }
+
+    .find_content input {
+        height: 50px;
+    }
+
+
+.btnfindmail {
+    background-color: #4472C4;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .btnfindmail:hover {
+        background-color: #4472C4;
+        color: #fff;
+    }
+
+.btnfindCancel {
+    background-color: #999999;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .btnfindCancel:hover {
+        background-color: #999999;
+        color: #fff;
+    }
+
+.find_comp_box {
+    margin-top: 20px;
+    display: none;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.find_comp_text {
+    color: #4472C4;
+}
+
+/* Join */
+
+#adultContainer {
+    display: none;
+}
+
+#JoinContainer {
+    padding-top: 20px;
+    height: auto;
+}
+
+.join_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+.join_input_box {
+    padding-bottom: 10px;
+}
+
+.btnIdch {
+    background-color: #FFD650;
+    height: 40px;
+    line-height: 25px;
+    border: 0;
+    width: 100%;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+
+    .btnIdch:hover {
+        background-color: #FFD650;
+        color: #fff;
+    }
+
+.btnJoin {
+    background-color: #004D91;
+    height: 40px;
+    line-height: 25px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .btnJoin:hover {
+        background-color: #004D91;
+        color: #fff;
+    }
+
+.btnCancel {
+    background-color: #999999;
+    height: 40px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .btnCancel:hover {
+        background-color: #999999;
+        color: #fff;
+    }
+
+/* Service Main */
+.seMain_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+/* Service List  */
+.seList_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+.seListTopBtn {
+    padding-top: 20px;
+}
+
+.Createbtn {
+    background-color: #FFD650;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .Createbtn:hover {
+        background-color: #FFD650;
+        color: #004D91;
+    }
+/* Service View */
+.seView_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+.seViewBox input {
+    margin-bottom: 10px;
+}
+
+.seViewBox select {
+    margin-bottom: 10px;
+}
+
+.seViewBox textarea {
+    margin-bottom: 10px;
+}
+
+.seCreateBtn {
+    background-color: #4472C4;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .seCreateBtn:hover {
+        background-color: #4472C4;
+        color: #fff;
+    }
+
+.seEditBtn {
+    background-color: #4472C4;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .seEditBtn:hover {
+        background-color: #4472C4;
+        color: #fff;
+    }
+
+.seDelBtn {
+    background-color: #FA2829;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .seDelBtn:hover {
+        background-color: #FA2829;
+        color: #fff;
+    }
+
+.seListBtn {
+    background-color: #46aa54;
+    height: 50px;
+    line-height: 30px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .seListBtn:hover {
+        background-color: #46aa54;
+        color: #fff;
+    }
+/* 약관 */
+.terms_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+#terms_Container {
+    padding-top: 10px;
+}
+
+    #terms_Container textarea {
+        width: 100%;
+        resize: none;
+        border: 0;
+    }
+
+terms_Container .btn {
+    padding-left: 5px;
+}
+
+
+
+.btn_terms {
+    width: 100%;
+    line-height: 20px;
+    border: 2px solid #ffd650;
+    border-radius: 8px;
+    color: #ffd650;
+    font-weight: bold;
+    margin-bottom: 3%;
+    margin-right: 2%;
+    float: left;
+    text-align: center;
+}
+
+    .btn_terms:last-child {
+        margin-right: 0px;
+    }
+
+    .btn_terms:hover {
+        background-color: #ffd650;
+        color: #333;
+        margin-bottom: 3%;
+        margin-right: 2%;
+        float: left;
+        text-align: center;
+    }
+/* 게임 가이드 */
+.guide_header {
+    background-image: linear-gradient(120deg, #004D91 0%, #0165EE 100%);
+    color: #fff;
+}
+
+#guide_Container {
+    padding-top: 20px;
+    height: auto;
+}
+
+#guideBox_Container {
+}
+
+.btn_guide {
+    width: 22%;
+    line-height: 40px;
+    border: 2px solid #ffd650;
+    border-radius: 8px;
+    color: #ffd650;
+    font-weight: bold;
+    margin-bottom: 3%;
+    margin-right: 2%;
+    float: left;
+    text-align: center;
+}
+
+    .btn_guide:hover {
+        background-color: #ffd650;
+        color: #333;
+    }
+
+#guideBox_Files img {
+    width: 100%;
+}
+
+@keyframes pink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .value {
+        font-size: 32px;
+    }
+
+    .hours::before,
+    .minutes::before,
+    .seconds::before {
+        content: ":";
+        float: left;
+        font-size: 26pt;
+        margin-top: -3px;
+        position: relative;
+    }
+
+    .progress-meter {
+        margin: 0px auto 40px;
+        padding: 20px;
+    }
+
+        .progress-meter .progress-point:before {
+            -moz-border-radius: 20px;
+            -webkit-border-radius: 20px;
+            border-radius: 20px;
+            width: 22px;
+            height: 22px;
+            margin: 0 auto 12px;
+            border: 2px solid #aaaaaa;
+            font-weight: normal;
+        }
+
+        .progress-meter .point:before {
+            width: 4px;
+            height: 4px;
+            margin-top: 9px;
+            content: "\00AD";
+            margin-bottom: 22px;
+            background-color: #aaa;
+        }
+
+    .progress-points .label {
+        color: #000;
+        font-size: 12px;
+    }
+
+    .progress-meter .progress-point.completed:before {
+        border-color: #aaa;
+        background-color: #aaa;
+        border: 2px;
+    }
+
+    .cf-btn1 {
+        margin-top: 0px;
+        margin-bottom: 20px;
+        float: right;
+    }
+
+    .uploader label {
+        height: 300px;
+    }
+
+    .uploader #start {
+        padding: 10px;
+        margin-top: 30px;
+    }
+
+    .uploader #file-image {
+        max-width: 240px;
+    }
+
+    /*wallet*/
+    .wall_card h4 {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .step {
+        width: 100%;
+        padding: 4px;
+        margin-bottom: 10px;
+    }
+
+    .btn-info.btn-fill {
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .help_btn {
+        font-size: 12px;
+        width: 100%;
+    }
+}
+
+
+/*추가*/
+/*로그인*/
+.logo {
+    width: 28%;
+    margin: 0 auto;
+}
+
+    .logo img {
+        margin-top: -16px;
+    }
+
+#btnJoinGo {
+    color: #efefef;
+}
+
+/*고객센터*/
+.wrap {
+    margin-top: 50px;
+}
+
+#Notice_Board i {
+    color: #4D74A7;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+#Notice_Board td {
+    padding-top: 0;
+}
+
+.table h5 {
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: bold;
+    color: #666;
+}
+
+#Notice_Board td a {
+    color: #444;
+}
+
+#Faq_Board i {
+    color: #4D74A7;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.title {
+    padding-left: 16px;
+}
+
+    .title h4 {
+        color: #fff;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+.btn_counsel {
+    background-color: #FFD650;
+    float: left;
+    width: 48%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border: 0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 1%;
+    cursor: pointer;
+}
+
+
+/*문의내역*/
+.table {
+    margin-bottom: 0;
+}
+
+.table-striped .head td {
+    font-weight: bold;
+}
+
+.DetailBtn {
+    background: #004D91;
+    color: #fff;
+    border: 0;
+}
+
+    .DetailBtn:hover {
+        background: #004D91;
+        color: #FFD650;
+    }
+
+
+/*가이드*/
+#guideBox_Files {
+    width: 100%;
+    float: left;
+    right: 5%;
+    top: 0;
+    margin-bottom: 2%;
+}
+
+#guideBox_img img {
+    width: 100%;
+}
+
+/*가이드 게임리스트*/
+
+.guideBox_body img {
+    width: 100%;
+}
+
+#game_guidelist h6 {
+    color: #999;
+    font-weight: normal;
+    text-align: center;
+}
+
+.btn_game {
+    padding: 7px;
+    font-size: 1.5em;
+    background: #666;
+    border: 2px solid #aaa;
+    color: #aaa;
+    border-radius: 8px;
+    margin-bottom: 2%;
+    position: relative;
+}
+
+    .btn_game:hover {
+        border: 2px solid #C4B890;
+        color: #c4b890;
+    }
+
+
+.btn_game1 {
+    padding: 7px;
+    font-size: 1.5em;
+    background: #ffcd42;
+    border: 2px solid #aaa;
+    color: #000;
+    border-radius: 8px;
+    margin-bottom: 2%;
+    position: relative;
+}
+
+    .btn_game1:hover {
+        border: 2px solid #C4B890;
+        color: #c4b890;
+    }
+
+.arrow {
+    display: inline-block;
+    line-height: 1.2em;
+    text-align: right;
+    color: #aaa;
+    font-size: 0.75em;
+    position: absolute;
+    right: 16px;
+    margin-top: 10px;
+}
+
+    .arrow:hover {
+        color: #c4b890;
+    }

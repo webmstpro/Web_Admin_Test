@@ -1,0 +1,266 @@
+﻿
+@{
+    ViewData["Title"] = "GameGuide";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-list"></span>GameGuide 리스트
+                <div class="pull-right action-buttons">
+                    <div class="form-inline">
+                        <select class="form-control" name="gg_Gtype" id="gg_Gtype"></select>
+                        <div class="btn btn-success" onclick="Create(0);">생성</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>제목</td>
+                            <td>메모</td>
+                            <td>파일1</td>
+                            <td>파일2</td>
+                            <td>날짜</td>
+                            <td>비고</td>
+                        </tr>
+                    </thead>
+                    <tbody id="List_Container"></tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>
+                            Total Count <span class="label label-info" id="Total">0</span>
+                        </h6>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="pagination pagination-sm pull-right" id="pageing">
+                            <li class="disabled"><a href="#">«</a></li>
+                            <li><a href="#">0</a></li>
+                            <li class="disabled"><a href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script id="UserCards_Tmpl" type="text/x-tmpl">
+        <tr>
+            <td>${gg_title}</td>
+            <td>${gg_memo}</td>
+            <td><img src="/UpFiles/GameGuid/${gg_file1}" alt="GameGuide Img" style="width: 150px; max-height: 150px;"onclick="fileOpen('${gg_file1}')" /> </td>
+            <td>
+                {{if gg_file2 != null}}
+                <img src="/UpFiles/GameGuid/${gg_file2}" alt="GameGuide Img" style="width: 150px; max-height: 150px;" onclick="fileOpen('${gg_file2}')" />
+                {{else}}
+                이미지없음
+                {{/if}}
+            </td>
+            <td>${GetDate01(gg_date)}</td>
+            <td>
+                <div class="btn btn-success" onclick="Edit('${gg_idx}')">수정</div>
+                <div class="btn btn-danger" onclick="Del('${gg_idx}')">삭제</div>
+            </td>
+        </tr>
+    </script>
+
+    <script id="GameType_Tmpl" type="text/x-tmpl">
+        <option value="${g_Num}">${g_Name}</option>
+    </script>
+
+    <script id="NoticeCreate_Tmpl" type="text/x-jquery-tmpl">
+        <form name="gameGuideForm" id="gameGuideForm" action="/" method="post">
+            <input type="hidden" name="gg_lan" id="gg_lan" class="form-control" value="1" readonly="readonly" />
+            <input type="hidden" name="gg_idx" id="gg_idx" class="form-control" value="${gg_idx}" readonly="readonly" />
+            <input type="hidden" name="gg_Gtype" id="gg_Gtype" class="form-control" value="${gg_Gtype}" readonly="readonly" />
+            <input type="hidden" name="gg_orderby" id="gg_orderby" class="form-control" value="${gg_orderby}" readonly="readonly" />
+            <input type="text" name="gg_title" id="gg_title" class="form-control" placeholder="Title" required data-msg-required="제목을 입력해주세요." value="${gg_title}" />
+            <input type="text" name="gg_memo" id="gg_memo" class="form-control" placeholder="Memo" required data-msg-required="메모를 입력해주세요." value="${gg_memo}" />
+            <input type="file" name="gg_file1" id="gg_file1" class="form-control" />
+            <input type="file" name="gg_file2" id="gg_file2" class="form-control" />
+            <select name="gg_use" id="gg_use" class="form-control" placeholder="State" required data-msg-required="사용유무를 선택해주세요.">
+                <option value="0" {{if gg_use == 0}} selected{{/if}}>사용</option>
+                <option value="1" {{if gg_use == 1}} selected{{/if}}>삭제</option>
+            </select>
+        </form>
+    </script>
+
+    <script>
+        var PageSize = 20;
+        var PageRow = 10;
+
+        $(function () {
+            GameType();
+        });
+
+        $(document).on("change", "#gg_Gtype", function () {
+
+            List($(this).val());
+
+        });
+
+        function GameType() {
+            $.ajax({
+                url: "@ViewBag.ApiUrl/Home/GetGameType",
+                type: 'POST',
+                success: function (data) {
+                    $("#GameType_Tmpl").tmpl(data).appendTo("#gg_Gtype");
+                    List(data[0].g_Num);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("GameType Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                }
+            });
+        }
+
+        function List(gType) {
+
+            pData = {
+                "lan_idx": 1,
+                "sbGtype": gType,
+                "gg_idx": 0
+            }
+
+            $.ajax({
+                url: "@ViewBag.ApiUrl/Home/GetGameGuide",
+                type: 'POST',
+                data: pData,
+                success: function (data) {
+                    if (data.length != 0) {
+                        $("#List_Container").text("");
+                        $("#UserCards_Tmpl").tmpl(data).appendTo("#List_Container");
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("관리자 리스트 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                }
+            });
+        }
+
+        $(document).on("click", "#btnPopup02", adSubmit);
+
+        function adSubmit() {
+            if ($("#gameGuideForm").valid()) {
+
+                var formData = new FormData();
+                var fileUpload1 = $("#gg_file1").get(0);
+                var files1 = fileUpload1.files;
+                
+                for (var i = 0; i < files1.length; i++) {
+                    formData.append(files1[i].name, files1[i]);
+                }
+
+                var fileUpload2 = $("#gg_file2").get(0);
+                var files2 = fileUpload2.files;
+
+                for (var i = 0; i < files2.length; i++) {
+                    formData.append(files2[i].name, files2[i]);
+                }
+
+                $("#gameGuideForm input").each(function (x, y) {
+                    formData.append($(y).attr("name"), $(y).val());
+                });
+
+                $.ajax({
+                    url: "/Cmd/SetGameGuideCUD",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        alert(data.rVal);
+                        if (data.rCnt == 0) {
+                            //location.reload();
+                            List($("#gg_Gtype").val());
+                            $("#PopupManage01").modal("hide");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Login Local Error \n" + textStatus + " : " + errorThrown + ":" + jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                        console.log(jqXHR);
+                    }
+                });
+            }
+        }
+
+        function Del(idx) {
+            if (confirm("삭제하시겠습니까?")) {
+                pData = {
+                    "gg_idx": idx,
+                    "gg_use": 1
+                };
+
+                $.ajax({
+                    url: "@ViewBag.ApiUrl/Manage/SetGameGuideCUD",
+                    type: 'POST',
+                    data: pData,
+                    success: function (data) {
+                        alert(data.rVal)
+                        if (data.rCnt == 0) {
+                            location.reload();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Login Local Error \n" + textStatus + " : " + errorThrown + ":" + jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                        console.log(jqXHR);
+                    }
+                });
+            }
+        }
+
+        function Edit(idx) {
+            $.ajax({
+                url: "@ViewBag.ApiUrl/Manage/GetGameGuideDetail",
+                type: 'POST',
+                data: { "gg_idx": idx},
+                success: function (data) {
+                    $("#PopupManage01_body").text("");
+                    $("#PopupManage01").modal("show");
+                    $("#PopupManage01_heading").text("게임가이드 수정");
+                    $("#NoticeCreate_Tmpl").tmpl(data).appendTo("#PopupManage01_body");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Login Local Error \n" + textStatus + " : " + errorThrown + ":" + jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log(jqXHR);
+                }
+            });
+        }
+
+        function Create(idx) {
+
+            var data = {
+                "gg_idx": idx,
+                "gg_memo": "",
+                "gg_Gtype": $("#gg_Gtype").val(),
+                "gg_file1": "",
+                "gg_file2": "",
+                "gg_use": 0,
+                "gg_orderby": 0
+            };
+
+            $("#PopupManage01_body").text("");
+            $("#PopupManage01").modal("show");
+            $("#PopupManage01_heading").text("게임가이드 생성");
+            $("#NoticeCreate_Tmpl").tmpl(data).appendTo("#PopupManage01_body");
+        }
+
+        function fileOpen(sUrl) {
+            window.open('/UpFiles/GameGuid/' + sUrl, 'fileOpen', 'width=500, height=500, top=0, left=0');
+        }
+    </script>
+}

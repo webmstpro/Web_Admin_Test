@@ -1,0 +1,31 @@
+[{
+        "Language": "KOR",
+        "data": [{
+            "TopTitle": "게임방법",
+            "GameGuideNote": "메뉴를 선택하시면 방법을 보실 수 있습니다."
+        }]
+    },
+    {
+        "Language": "USA",
+      "data": [
+        {
+          "TopTitle": "How to play",
+          "GameGuideNote": "Select the menu to see how to play."
+        }
+      ]
+    },
+    {
+        "Language": "JPN",
+        "data": [{
+            "TopTitle": "遊び方",
+            "GameGuideNote": "メニューの選択方法を見ることができます。"
+        }]
+    },
+    {
+        "Language": "CHN",
+        "data": [{
+            "TopTitle": "怎么玩",
+            "GameGuideNote": "您可以看到如何选择菜单。"
+        }]
+    }
+]

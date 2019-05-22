@@ -1,0 +1,59 @@
+[{
+        "Language": "KOR",
+        "data": [{
+            "TopTitle": "문의 내역",
+            "headTitle1": "비고",
+            "headTitle2": "게임",
+            "headTitle3": "분류",
+            "headTitle4": "상태",
+            "headTitle5": "작성일",
+            "Btn_Question": "문의하기",
+            "Btn_View": "상세",
+            "errMsg": "등록된 문의사항이 없습니다."
+        }]
+    },
+    {
+        "Language": "USA",
+      "data": [
+        {
+          "TopTitle": "Inquiries History",
+          "headTitle1": "Note",
+          "headTitle2": "Game",
+          "headTitle3": "Classification",
+          "headTitle4": "State",
+          "headTitle5": "Date",
+          "Btn_Question": "Contact us",
+          "Btn_View": "View",
+          "errMsg": "There are no registered Inquiries."
+        }
+      ]
+    },
+    {
+        "Language": "JPN",
+        "data": [{
+            "TopTitle": "質問履歴",
+            "headTitle1": "ビュー",
+            "headTitle2": "ゲーム",
+            "headTitle3": "分類",
+            "headTitle4": "状態",
+            "headTitle5": "日付",
+            "Btn_Question": "お問い合わせ",
+            "Btn_View": "ビュー",
+            "errMsg": "登録された質問はありません。"
+        }]
+    },
+    {
+        "Language": "CHN",
+        "data": [{
+            "TopTitle": "问题历史",
+            "headTitle1": "视图",
+            "headTitle2": "游戏",
+            "headTitle3": "分类",
+            "headTitle4": "州",
+            "headTitle5": "日期",
+            "Btn_Question": "联系我们",
+            "Btn_View": "视图",
+            "errMsg": "没有注册的问题。"
+        }]
+    }
+]

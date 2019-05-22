@@ -1,0 +1,226 @@
+﻿
+@{
+    ViewData["Title"] = "Roulette";
+    Layout = "~/Views/Shared/_LayoutTest.cshtml";
+}
+
+<style>
+
+    .img {
+        width: 50px;
+        margin: 5px;
+        padding: 2px;
+    }
+
+    #Card_Container div {
+        display: inline-block;
+    }
+
+    /*#User_Container div {
+        display: inline-block;
+    }*/
+
+    .choice {
+        border: 1px dotted red;
+    }
+
+    .choiceReady {
+        border: 1px solid blue;
+    }
+
+    .UserCard {
+        display: inline-block;
+        position: relative;
+    }
+
+    .circle_1 {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        background-color: red;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 2em;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        margin: 3px;
+    }
+
+    .circle_0 {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        background-color: #000;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 2em;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        margin: 3px;
+    }
+
+    .circle_2 {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        background-color: #019301;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 2em;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        margin: 3px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                룰랫 패 셋팅 : 현재 설정 상태 <span id="SettingState"></span>
+            </div>
+            <div class="panel-body">
+                <div class="col-lg-4">
+                    <form method="post" id="holdemForm" name="holdemForm">
+                        <input type="hidden" name="gNum" id="gNum" value="5" />
+                        <input type="hidden" name="Rand" id="Rand" value="0" />
+                        <div id="User_Container">
+                            @*<div class="UserCard">
+                                <input type="hidden" name="User" value="0" />
+                                <div class="circle_2" colNum="2" idx="0">0</div>
+                            </div>*@
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-8">
+                    <div id="Card_Container">
+                        <div class="circle_2 btnChoice" colNum="2" idx="0">0</div>
+                        @{
+                            var nCh = 1;
+                            for (var i = 1; i <= 36; i++)
+                            {
+                                if (i == 11) { nCh++; }
+                                if (i == 19) { nCh++; }
+                                if (i == 29) { nCh++; }
+                                var classNum = nCh % 2;
+                                <div class="circle_@classNum btnChoice" colNum="@classNum" idx="@i">@i</div>
+                                nCh++;
+                            }
+                        }
+                        <div class="circle_2 btnChoice" colNum="2" idx="37">00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="btn btn-success" id="btnSubmit">저장</div>
+                <div class="btn btn-danger" id="btnRand">랜덤</div>
+                <div class="btn btn-warning" id="btnReset">리셋</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script id="UserCards_Tmpl" type="text/x-tmpl">
+        <div class="UserCard">
+            <input type="hidden" name="User" value="${card}" />
+            <input type="hidden" name="UserColor" value="${userCard}" />
+            <div class="circle_${userCard}" colNum="${userCard}">{{if card == 37}} 00 {{else}} ${card} {{/if}}</div>
+            @*// 여러개를 사용할 때만 삭제를 사용한다.
+            <div class="btn btn-xs btn-warning btnDelete" style="position: absolute; right: 1px; top: -5px;">X</div>*@
+        </div>
+    </script>
+
+    <script>
+        $(function () {
+            cardList($("#gNum").val());
+        });
+
+        $(document).on("click", ".btnChoice", function () {
+
+            //var cnt = $("input[name=User]").length;
+            var ChoiceData = {
+                "card": $(this).attr("idx"),
+                "userCard": $(this).attr("colNum")
+            }
+            // 한개일때만 사용한다.
+            $("#User_Container").text("");
+            $("#UserCards_Tmpl").tmpl(ChoiceData).appendTo("#User_Container");
+            
+        });
+
+        $(document).on("click", ".btnDelete", function () {
+            $(this).parent().remove();
+        });
+
+        function cardList(gNum) {
+            $.ajax({
+                url: "@ViewBag.ApiUrl/CardSet/GetCardList",
+                type: 'POST',
+                data: { "gNum": gNum},
+                success: function (data) {
+                    if (data.length == 0) {
+                        console.log("없다면");
+                    } else {
+
+                        $(data).each(function (key, value) {
+                            if (key == 0) {
+                                if (value.rand == 0) {
+                                    $("#SettingState").text("[ 패 셋팅 ]");
+                                } else {
+                                    $("#SettingState").text("[ 랜덤 셋팅 ]");
+                                }
+                            }
+                        });
+
+                        $("#User_Container").text("");
+                        $("#UserCards_Tmpl").tmpl(data).appendTo("#User_Container");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("패설정 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log(jqXHR);
+                }
+            });
+        }
+
+        $(document).on("click", "#btnRand", function () {
+            $("#Rand").val(1);
+            formSubmit();
+        });
+
+        $(document).on("click", "#btnSubmit", function () {
+            $("#Rand").val(0);
+            formSubmit();
+        });
+
+        function formSubmit() {
+            $.ajax({
+                url: "@ViewBag.ApiUrl/CardSet/SetRoulette",
+                type: 'POST',
+                data: $("#holdemForm").serialize(),
+                success: function (data) {
+                    alert(data.rVal);
+                    location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("패설정 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                }
+            });
+        }
+
+        $(document).on("click", "#btnReset", function () {
+            location.reload();
+        });
+
+    </script>
+}
+
+
+
+

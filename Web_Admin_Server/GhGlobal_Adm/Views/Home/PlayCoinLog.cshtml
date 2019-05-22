@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewData["Title"] = "PlayCoinLog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-list"></span>PlayCoin Log
+                <div class="pull-right action-buttons">
+                    <div class="form-inline">
+                        <select class="form-control" name="sKey" id="sKey">
+                            <option value="">전체</option>
+                            <option value="UserID">아이디</option>
+                            <option value="Nick">닉네임</option>
+                            <option value="Item">아이템</option>
+                            <option value="PaymentId">구매키</option>
+                        </select>
+                        <input class="form-control" type="text" name="sVal" id="sVal" value="" placeholder="검색어를 입력하세요." />
+                        <div class="btn btn-success" id="btnSearch">검색</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>No</td>
+                            <td>아이디</td>
+                            <td>닉네임</td>
+                            <td>구매아이템</td>
+                            <td>구매키</td>
+                            <td>구매일자</td>
+                        </tr>
+                    </thead>
+                    <tbody id="List_Container"></tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>
+                            Total Count <span class="label label-info" id="Total">0</span>
+                        </h6>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="pagination pagination-sm pull-right" id="pageing">
+                            <li class="disabled"><a href="#">«</a></li>
+                            <li><a href="#">0</a></li>
+                            <li class="disabled"><a href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script id="UserCards_Tmpl" type="text/x-tmpl">
+        <tr>
+            <td>${LogIdx}</td>
+            <td>${UserID}</td>
+            <td>${Nick}</td>
+            <td>${Item}</td>
+            <td>${PaymentId}</td>
+            <td>${GetDate01(RegDate)}</td>
+        </tr>
+    </script>
+
+    <script id="UserCardsEmpty_Tmpl" type="text/x-tmpl">
+        <tr>
+            <td colspan="6">코인로그가 존재하지 않습니다.</td>
+        </tr>
+    </script>
+
+    <script>
+        var PageSize = 20;
+        var PageRow = 10;
+
+        $(function () {
+            List(1);
+        });
+
+        $(document).on("click", "#btnSearch", function () {
+            List(1);
+        });
+
+        function List(PageNo) {
+
+            pData = {
+                "PageSize": PageSize,
+                "PageNo": PageNo,
+                "sKey": $("#sKey").val(),
+                "sVal": $("#sVal").val()
+            }
+
+            $.ajax({
+                url: "@ViewBag.ApiUrl/Manage/GetPlayCoinLog",
+                type: 'POST',
+                data: pData,
+                success: function (data) {
+                    $("#List_Container").text("");
+                    if (data.item2 == 0) {
+                        $("#UserCardsEmpty_Tmpl").tmpl().appendTo("#List_Container");
+                    } else {
+                        $("#UserCards_Tmpl").tmpl(data.item1).appendTo("#List_Container");
+                        $("#Total").text(data.item2);
+                        var page_viewList = Paging(data.item2, PageSize, PageRow, PageNo, "List");
+                        $("#pageing").empty().html(page_viewList);
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("리스트 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                }
+            });
+        }
+
+        goPaging_List = function (PageNo) {
+            List(PageNo);
+        }
+
+    </script>
+}
