@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GhGlobal_Models\GhGlobal_Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="Views\Shared\_LayoutLogin.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

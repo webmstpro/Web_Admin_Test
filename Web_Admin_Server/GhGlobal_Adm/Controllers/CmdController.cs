@@ -38,7 +38,7 @@ namespace GhGlobal_Adm.Controllers
         }
 
         [HttpPost]
-        public JsonResult SetAdLogin(GhGlobal_Models.Manage.Man.adMember mParams)
+        public JsonResult SetAdLogin(Models.Man.adMember mParams)
         {
             Hashtable jsonReturn = new Hashtable();
             DynamicParameters param = new DynamicParameters();
@@ -75,7 +75,7 @@ namespace GhGlobal_Adm.Controllers
             DynamicParameters param = new DynamicParameters();
             param.Add("@GameKind", gNum);
             var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_GameCardSetting_List", param, _StrConn);
-            var UserList = new List<GhGlobal_Models.CardSet.Cards>();
+            var UserList = new List<Models.Cards>();
 
             if (DataResult.Count() > 0)
             {
@@ -93,7 +93,7 @@ namespace GhGlobal_Adm.Controllers
                     {
                         for (var i = 0; i < userCardArry.Length; i++)
                         {
-                            UserList.Add(new GhGlobal_Models.CardSet.Cards()
+                            UserList.Add(new Models.Cards()
                             {
                                 GameKind = GameKind,
                                 Rand = Rand,
@@ -106,7 +106,7 @@ namespace GhGlobal_Adm.Controllers
                     {
                         for (var i = 0; i < userCardArry.Length; i++)
                         {
-                            UserList.Add(new GhGlobal_Models.CardSet.Cards()
+                            UserList.Add(new Models.Cards()
                             {
                                 GameKind = GameKind,
                                 Rand = Rand,
@@ -161,7 +161,7 @@ namespace GhGlobal_Adm.Controllers
             return Json(jsonReturn);
         }
 
-        public JsonResult SetMemDel(GhGlobal_Models.Manage.Man.spMemParam02 jsonObject)
+        public JsonResult SetMemDel(Models.Man.spMemParam02 jsonObject)
         {
             jsonObject.ad_ip = HttpContext.Connection.RemoteIpAddress.ToString();
             jsonObject.ad_idx = Convert.ToInt32(HttpContext.Session.GetInt32("ad_idx"));
@@ -171,7 +171,7 @@ namespace GhGlobal_Adm.Controllers
         }
 
         [HttpPost]
-        public JsonResult SetGameGuideCUD(GhGlobal_Models.Manage.Man.sGameGuide jsonObject)
+        public JsonResult SetGameGuideCUD(Models.Man.sGameGuide jsonObject)
         {
             Hashtable jsonReturn = new Hashtable();
             // 파일 체크 Start
@@ -360,7 +360,7 @@ namespace GhGlobal_Adm.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetMemList(GhGlobal_Models.Manage.Man.spMemParam01 mParams)
+        public JsonResult GetMemList(Models.Man.spMemParam01 mParams)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@lan_idx", mParams.lan_idx);
@@ -376,7 +376,7 @@ namespace GhGlobal_Adm.Controllers
 
         // 머니가 많을 경우
         [HttpPost]
-        public JsonResult SetMemMoneyMultiChange(GhGlobal_Models.Manage.Man.gMemberMulti mParams)
+        public JsonResult SetMemMoneyMultiChange(Models.Man.gMemberMulti mParams)
         {
             Hashtable jsonReturn = new Hashtable();
             DynamicParameters param = new DynamicParameters();
@@ -397,7 +397,7 @@ namespace GhGlobal_Adm.Controllers
         }
 
         // 머니가 하나일 경우
-        public JsonResult SetMemMoneyOneChange(GhGlobal_Models.Manage.Man.gMember mParams)
+        public JsonResult SetMemMoneyOneChange(Models.Man.gMember mParams)
         {
             Hashtable jsonReturn = new Hashtable();
             DynamicParameters param = new DynamicParameters();
@@ -415,7 +415,7 @@ namespace GhGlobal_Adm.Controllers
 
 
         [HttpPost]
-        public JsonResult GetMemConList(GhGlobal_Models.Manage.Man.spMemParam01 mParams)
+        public JsonResult GetMemConList(Models.Man.spMemParam01 mParams)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@lan_idx", mParams.lan_idx);
@@ -430,7 +430,7 @@ namespace GhGlobal_Adm.Controllers
         }
 
         [HttpPost]
-        public JsonResult SetMemConDel(GhGlobal_Models.Manage.Man.gMember mParams)
+        public JsonResult SetMemConDel(Models.Man.gMember mParams)
         {
             Hashtable jsonReturn = new Hashtable();
             DynamicParameters param = new DynamicParameters();

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace GhGlobal_Models.CardSet
+namespace GhGlobal_Adm.Models
 {
     public class Cards
     {

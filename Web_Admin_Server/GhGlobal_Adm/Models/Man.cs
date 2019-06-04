@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace GhGlobal_Models.Manage
+namespace GhGlobal_Adm.Models
 {
     public class Man
     {
