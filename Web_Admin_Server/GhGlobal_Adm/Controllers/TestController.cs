@@ -51,6 +51,11 @@ namespace GhGlobal_Adm.Controllers
             ViewBag.ApiUrl = ApiUrl;
             return View();
         }
+        public IActionResult MemMultList()
+        {
+            ViewBag.ApiUrl = ApiUrl;
+            return View();
+        }
 
         public IActionResult MemConList()
         {

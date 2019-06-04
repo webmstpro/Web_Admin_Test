@@ -47,31 +47,6 @@
                         <input type="hidden" name="gNum" id="gNum" value="1" />
                         <input type="hidden" name="Rand" id="Rand" value="0" />
                         <div id="User_Container">
-                            @*@{
-                                for (var i = 1; i < 10; i += 2)
-                                {
-                                    var img = i + ".png";
-                                    var img1 = i + 1 + ".png";
-                                    <div class="UserCard">
-                                        유저
-                                        <input type="hidden" name="User" id="User_@i" value="@i" />
-                                        <input type="hidden" name="User" id="User_@(i+1)" value="@(i+1)" />
-                                        <img src="~/images/@img" class="UserImg" idx="@i" UserIdx="@i" />
-                                        <img src="~/images/@img1" class="UserImg" idx="@(i+1)" UserIdx="@(i+1)" />
-                                    </div>
-                                }
-                            }
-                            <div class="DealerCard">
-                                딜러
-                                @{
-                                    for (var i = 11; i < 16; i++)
-                                    {
-                                        var img = i + ".png";
-                                        <input type="hidden" name="User" id="User_@i" value="@i" />
-                                        <img src="~/images/@img" class="UserImg" idx="@i" UserIdx="@i" alt="@i" />
-                                    }
-                                }
-                            </div>*@
                         </div>
                     </form>
                 </div>
@@ -132,11 +107,10 @@
         function cardList(gNum) {
             //GetCardList
             $.ajax({
-                url: "@ViewBag.ApiUrl/CardSet/GetCardList",
+                url: "/Cmd/GetCardList",
                 type: 'POST',
                 data: { "gNum": gNum},
                 success: function (data) {
-                    console.log(data);
                     if (data.length == 0) {
                         console.log("없다면");
                     } else {
@@ -177,7 +151,7 @@
 
         function formSubmit() {
             $.ajax({
-                url: "@ViewBag.ApiUrl/CardSet/SetHoldem",
+                url: "/Cmd/SetHoldem",
                 type: 'POST',
                 data: $("#holdemForm").serialize(),
                 success: function (data) {

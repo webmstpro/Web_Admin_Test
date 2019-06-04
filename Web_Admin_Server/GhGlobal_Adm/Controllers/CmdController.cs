@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Dapper;
+using GhGlobal_Adm.Cmd;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +25,7 @@ namespace GhGlobal_Adm.Controllers
         private static string JsonApiUrl;
         public string sLanguage;
         private static List<string> _FilesExts;
+        private static string _StrConn;
 
         public CmdController(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
@@ -30,36 +34,129 @@ namespace GhGlobal_Adm.Controllers
             JsonFilePath = _hostingEnvironment.WebRootPath + "\\";
             JsonApiUrl = configuration.GetSection("ApiUrl:DevUrl").Get<string>();
             _FilesExts = _configuration.GetSection("FileUpload:ManageFileExt").Get<List<string>>();
-            //userIP = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            //userIP = HttpContext.Connection.RemoteIpAddress.ToString();
-            //var RootPath = _appEnvironment.WebRootPath + "\\" + ServerClubfileUrl + "\\" + strBaseDirTemp;
+            _StrConn = configuration.GetConnectionString("DevConnection");
         }
 
-        public JsonResult SetAdLogin(GhGlobal_Models.Manage.Man.adMember jsonObject)
+        [HttpPost]
+        public JsonResult SetAdLogin(GhGlobal_Models.Manage.Man.adMember mParams)
         {
             Hashtable jsonReturn = new Hashtable();
-            jsonObject.ad_ip = HttpContext.Connection.RemoteIpAddress.ToString();
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@ad_id", mParams.ad_id);
+            param.Add("@ad_pw", mParams.ad_pw);
+            param.Add("@ad_ip", mParams.ad_ip);
+            param.Add("@rCnt", -1, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_ADMEMBER_LOGIN", param, _StrConn);
 
-            var objJsonReturn = objHttpClient("/Manage/SetAdLogin", jsonObject);
-            //var JsonLoginCheck = JObject.Parse(objJsonReturn.Value.ToString());
-            var JsonLoginCheck = JArray.Parse(objJsonReturn.Value.ToString());
-
-            if (JsonLoginCheck.Count > 0)
+            if(DataResult.Count() > 0)
             {
-                HttpContext.Session.SetInt32("ad_idx", (int)JsonLoginCheck.First["ad_idx"]);
-                HttpContext.Session.SetString("ad_id", jsonObject.ad_id);
-                HttpContext.Session.SetString("ad_name", (string)JsonLoginCheck.First["ad_name"]);
-                HttpContext.Session.SetInt32("ad_level", (int)JsonLoginCheck.First["ad_level"]);
-                HttpContext.Session.SetInt32("ad_use", (int)JsonLoginCheck.First["ad_use"]);
+                HttpContext.Session.SetInt32("ad_idx", (Int32)DataResult.First().ad_idx);
+                HttpContext.Session.SetString("ad_id", mParams.ad_id);
+                HttpContext.Session.SetString("ad_name", (string)DataResult.First().ad_name);
+                HttpContext.Session.SetInt32("ad_level", (int)DataResult.First().ad_level);
+                HttpContext.Session.SetInt32("ad_use", (int)DataResult.First().ad_use);
 
-                jsonReturn.Add("rCnt", 0);
-                jsonReturn.Add("rVal", (string)JsonLoginCheck.First["ad_name"] + "님 로그인 성공");
+                jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+                jsonReturn.Add("rVal", param.Get<string>("@rVal"));
             }
             else
             {
-                jsonReturn.Add("rCnt", -1);
+                jsonReturn.Add("rCnt", 1);
                 jsonReturn.Add("rVal", "아이디 및 비밀번호가 일치하지 않아 로그인에 실패했습니다.");
             }
+
+            return Json(DataResult);
+        }
+
+        [HttpPost]
+        public JsonResult GetCardList(int gNum)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@GameKind", gNum);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_GameCardSetting_List", param, _StrConn);
+            var UserList = new List<GhGlobal_Models.CardSet.Cards>();
+
+            if (DataResult.Count() > 0)
+            {
+                var GameKind = DataResult.First().GameKind;
+                var Rand = DataResult.First().Rand;
+                var Card = DataResult.First().Card;
+                var userCard = DataResult.First().UserCard;
+
+                try
+                {
+                    var CardArry = Card.Split(",");
+                    var userCardArry = userCard.Split(",");
+
+                    if (gNum == 4)
+                    {
+                        for (var i = 0; i < userCardArry.Length; i++)
+                        {
+                            UserList.Add(new GhGlobal_Models.CardSet.Cards()
+                            {
+                                GameKind = GameKind,
+                                Rand = Rand,
+                                Card = userCardArry[i],
+                                UserCard = userCardArry[i]
+                            });
+                        }
+                    }
+                    else
+                    {
+                        for (var i = 0; i < userCardArry.Length; i++)
+                        {
+                            UserList.Add(new GhGlobal_Models.CardSet.Cards()
+                            {
+                                GameKind = GameKind,
+                                Rand = Rand,
+                                Card = (CardArry.Length > i) ? CardArry[i] : "0",
+                                UserCard = userCardArry[i]
+                            });
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    var ss = e.Message;
+                }
+
+            }
+
+            return Json(UserList);
+        }
+
+        [HttpPost]
+        public JsonResult SetHoldem(IFormCollection form)
+        {
+            Hashtable jsonReturn = new Hashtable();
+
+            //var User = HttpContext.Request.Form["User"];
+            //var gNum = HttpContext.Request.Form["gNum"];
+
+            var gNum = Convert.ToInt16(form["gNum"]);
+            var Rand = Convert.ToInt16(form["Rand"]);
+            var Card = form["User"].ToString();
+            var User = "";
+
+            foreach (var item in form["User"].Select((value, index) => new { Value = value, Index = index }))
+            {
+                User += (item.Index == (form["User"].Count - 1)) ? Convert.ToString(item.Index) : Convert.ToString(item.Index) + ",";
+            }
+
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@GameKind", gNum);
+            param.Add("@Rand", Rand);
+            param.Add("@Card", Card);
+            param.Add("@UserCard", User);
+            param.Add("@UserIP", HttpContext.Connection.RemoteIpAddress.ToString());
+            param.Add("@rCnt", 0, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_GameCardSetting", param, _StrConn);
+
+            jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+            jsonReturn.Add("rVal", param.Get<string>("@rVal"));
 
             return Json(jsonReturn);
         }
@@ -131,6 +228,220 @@ namespace GhGlobal_Adm.Controllers
             return Json(objJsonReturn.Value);
         }
 
+        [HttpPost]
+        public JsonResult SetBaccarat(IFormCollection form)
+        {
+            Hashtable jsonReturn = new Hashtable();
+
+            var gNum = Convert.ToInt16(form["gNum"]);
+            var Rand = Convert.ToInt16(form["Rand"]);
+            //var Card = form["User"].ToString();
+            //var User = "0,1,2,3,4,5";
+            var Card = "";
+            var User = "";
+
+            Card += form["User_0"].ToString();
+            Card += "," + form["User_1"].ToString();
+            Card += "," + form["User_2"].ToString();
+            Card += "," + form["User_3"].ToString();
+            if (form["User_4"].ToString() != "0")
+                Card += "," + form["User_4"].ToString();
+            if (form["User_5"].ToString() != "0")
+                Card += "," + form["User_5"].ToString();
+
+
+            User += form["User_0"].ToString();
+            User += "," + form["User_1"].ToString();
+            User += "," + form["User_2"].ToString();
+            User += "," + form["User_3"].ToString();
+            User += "," + form["User_4"].ToString();
+            User += "," + form["User_5"].ToString();
+
+
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@GameKind", gNum);
+            param.Add("@Rand", Rand);
+            param.Add("@Card", Card);
+            param.Add("@UserCard", User);
+            param.Add("@UserIP", HttpContext.Connection.RemoteIpAddress.ToString());
+            param.Add("@rCnt", 0, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_GameCardSetting", param, _StrConn);
+
+            jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+            jsonReturn.Add("rVal", param.Get<string>("@rVal"));
+
+            return Json(jsonReturn);
+        }
+
+        [HttpPost]
+        public JsonResult SetRoulette(IFormCollection form)
+        {
+            Hashtable jsonReturn = new Hashtable();
+
+            var gNum = Convert.ToInt16(form["gNum"]);
+            var Rand = Convert.ToInt16(form["Rand"]);
+            //var Card = form["User"].ToString();
+            //var User = "0,1,2,3,4,5";
+            var Card = form["User"].ToString();
+            var User = form["UserColor"].ToString();
+
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@GameKind", gNum);
+            param.Add("@Rand", Rand);
+            param.Add("@Card", Card);
+            param.Add("@UserCard", User);
+            param.Add("@UserIP", HttpContext.Connection.RemoteIpAddress.ToString());
+            param.Add("@rCnt", 0, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_GameCardSetting", param, _StrConn);
+
+            jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+            jsonReturn.Add("rVal", param.Get<string>("@rVal"));
+
+            return Json(jsonReturn);
+        }
+
+
+        [HttpPost]
+        public JsonResult SetBlackJac(IFormCollection form)
+        {
+            Hashtable jsonReturn = new Hashtable();
+
+            var gNum = Convert.ToInt16(form["gNum"]);
+            var Rand = Convert.ToInt16(form["Rand"]);
+
+            var Card = "";
+            var CardMain = "";
+            var User = "";
+
+            var CardArry = form["User"].ToString().Split(",");
+
+            foreach (var item in CardArry.Select((value, index) => new { Value = value, Index = index }))
+            {
+                var mainCheck = item.Index % 12;
+
+                if (mainCheck <= 1)
+                {
+                    if (item.Value != "0")
+                    {
+                        if (CardMain == "")
+                            CardMain += item.Value;
+                        else
+                            CardMain += "," + item.Value;
+                    }
+                }
+                else
+                {
+                    if (item.Value != "0")
+                        Card += "," + item.Value;
+                }
+
+                if (User == "")
+                    User += item.Value;
+                else
+                    User += "," + item.Value;
+            }
+
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@GameKind", gNum);
+            param.Add("@Rand", Rand);
+            param.Add("@Card", CardMain + Card);
+            param.Add("@UserCard", User);
+            param.Add("@UserIP", HttpContext.Connection.RemoteIpAddress.ToString());
+            param.Add("@rCnt", 0, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_GameCardSetting", param, _StrConn);
+
+            jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+            jsonReturn.Add("rVal", param.Get<string>("@rVal"));
+
+            return Json(jsonReturn);
+        }
+
+        [HttpPost]
+        public JsonResult GetMemList(GhGlobal_Models.Manage.Man.spMemParam01 mParams)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@lan_idx", mParams.lan_idx);
+            param.Add("@PageSize", mParams.PageSize);
+            param.Add("@PageNo", mParams.PageNo);
+            param.Add("@sKey", mParams.sKey);
+            param.Add("@sVal", mParams.sVal);
+            param.Add("@rCnt", 0, DbType.Int16, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_MEMBER_LIST", param, _StrConn);
+            var retuData = new Tuple<dynamic, int>(DataResult, param.Get<Int16>("@rCnt"));
+            return Json(retuData);
+        }
+
+        // 머니가 많을 경우
+        [HttpPost]
+        public JsonResult SetMemMoneyMultiChange(GhGlobal_Models.Manage.Man.gMemberMulti mParams)
+        {
+            Hashtable jsonReturn = new Hashtable();
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@UserIdx", mParams.UserIdx);
+            param.Add("@Money1", mParams.Money1);
+            param.Add("@Money2", mParams.Money2);
+            param.Add("@Money3", mParams.Money3);
+            param.Add("@Money4", mParams.Money4);
+            param.Add("@Money5", mParams.Money5);
+            param.Add("@rCnt", -1, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_TEST_MEMBER_MULTI5_MONEY_UPDATE", param, _StrConn);
+
+            jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+            jsonReturn.Add("rVal", param.Get<string>("@rVal"));
+
+            return Json(jsonReturn);
+        }
+
+        // 머니가 하나일 경우
+        public JsonResult SetMemMoneyOneChange(GhGlobal_Models.Manage.Man.gMember mParams)
+        {
+            Hashtable jsonReturn = new Hashtable();
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@UserIdx", mParams.UserIdx);
+            param.Add("@Money", mParams.Money);
+            param.Add("@rCnt", -1, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_MEMBER_MONEY_UPDATE", param, _StrConn);
+
+            jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+            jsonReturn.Add("rVal", param.Get<string>("@rVal"));
+
+            return Json(jsonReturn);
+        }
+
+
+        [HttpPost]
+        public JsonResult GetMemConList(GhGlobal_Models.Manage.Man.spMemParam01 mParams)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@lan_idx", mParams.lan_idx);
+            param.Add("@PageSize", mParams.PageSize);
+            param.Add("@PageNo", mParams.PageNo);
+            param.Add("@sKey", mParams.sKey);
+            param.Add("@sVal", mParams.sVal);
+            param.Add("@rCnt", 0, DbType.Int16, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_MEMBER_CON_LIST", param, _StrConn);
+            var retuData = new Tuple<dynamic, int>(DataResult, param.Get<Int16>("@rCnt"));
+            return Json(retuData);
+        }
+
+        [HttpPost]
+        public JsonResult SetMemConDel(GhGlobal_Models.Manage.Man.gMember mParams)
+        {
+            Hashtable jsonReturn = new Hashtable();
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@UserIdx", mParams.UserIdx);
+            param.Add("@rCnt", -1, DbType.Int16, ParameterDirection.Output);
+            param.Add("@rVal", "", DbType.String, ParameterDirection.Output);
+            var DataResult = DapperORM.ReturnList<dynamic>("WSP_MEMBER_CON_DELETE", param, _StrConn);
+            jsonReturn.Add("rCnt", param.Get<Int16>("@rCnt"));
+            jsonReturn.Add("rVal", param.Get<string>("@rVal"));
+            return Json(jsonReturn);
+        }
 
         // HttpClient
         public JsonResult objHttpClient(string sUrl, dynamic jsonObject)

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "MemConList";
+    ViewData["Title"] = "MemMultList";
     Layout = "~/Views/Shared/_LayoutTest.cshtml";
 }
 
@@ -8,14 +8,14 @@
     <div class="col-lg-12">
         <div class="panel panel-success">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-list"></span>접속 유저
+                <span class="glyphicon glyphicon-list"></span>멤버 배틀비트 리스트
                 <div class="pull-right action-buttons">
                     <div class="form-inline">
                         <select class="form-control" name="sKey" id="sKey">
                             <option value="">전체</option>
                             <option value="UserID">아이디</option>
                             <option value="Nick">닉네임</option>
-                            <option value="g_Name">게임명</option>
+                            <option value="Email">이메일</option>
                         </select>
                         <input class="form-control" type="text" name="sVal" id="sVal" value="" placeholder="검색어를 입력하세요." />
                         <div class="btn btn-success" id="btnSearch">검색</div>
@@ -26,11 +26,13 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td>게임</td>
                             <td>아이디</td>
                             <td>닉네임</td>
-                            <td>아이피</td>
-                            <td>접속시간</td>
+                            <td>WPC</td>
+                            <td>BTC</td>
+                            <td>LTC</td>
+                            <td>ETH</td>
+                            <td>USDT</td>
                             <td>실행</td>
                         </tr>
                     </thead>
@@ -39,12 +41,12 @@
             </div>
             <div class="panel-footer">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <h6>
                             Total Count <span class="label label-info" id="Total">0</span>
                         </h6>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <ul class="pagination pagination-sm pull-right" id="pageing">
                             <li class="disabled"><a href="#">«</a></li>
                             <li><a href="#">0</a></li>
@@ -60,18 +62,22 @@
 @section Scripts{
     <script id="UserCards_Tmpl" type="text/x-tmpl">
         <tr>
-            <td>${g_Name}</td>
             <td>${UserID}</td>
             <td>${Nick}</td>
-            <td>${IP}</td>
-            <td>${GetDate01(RegDate)}</td>
-            <td><div class="btn btn-danger" onclick="ConDel('${UserIdx}', this)">삭제</div></td>
+            <td><input class="form-control" type="number" name="uMoney1_${UserIdx}" id="uMoney1_${UserIdx}" value="${Money}" /></td>
+            <td><input class="form-control" type="number" name="uMoney2_${UserIdx}" id="uMoney2_${UserIdx}" value="${Btc}" /></td>
+            <td><input class="form-control" type="number" name="uMoney3_${UserIdx}" id="uMoney3_${UserIdx}" value="${Ltc}" /></td>
+            <td><input class="form-control" type="number" name="uMoney4_${UserIdx}" id="uMoney4_${UserIdx}" value="${Eth}" /></td>
+            <td><input class="form-control" type="number" name="uMoney5_${UserIdx}" id="uMoney5_${UserIdx}" value="${Usdt}" /></td>
+            <td>
+                <div class="btn btn-danger" onclick="MoneyChange('${UserIdx}')">머니 변경</div>
+            </td>
         </tr>
     </script>
 
     <script id="UserCardsEmpty_Tmpl" type="text/x-tmpl">
         <tr>
-            <td colspan="6">유저가 존재하지 않습니다.</td>
+            <td colspan="5">유저가 존재하지 않습니다.</td>
         </tr>
     </script>
 
@@ -97,23 +103,23 @@
             }
 
             $.ajax({
-                url: "/Cmd/GetMemConList",
+                url: "/Cmd/GetMemList",
                 type: 'POST',
                 data: pData,
                 success: function (data) {
                     $("#List_Container").text("");
                     if (data.item2 == 0) {
-                        $("#UserCardsEmpty_Tmpl").tmpl(data.item1).appendTo("#List_Container");
+                        $("#UserCardsEmpty_Tmpl").tmpl().appendTo("#List_Container");
                     } else {
                         $("#UserCards_Tmpl").tmpl(data.item1).appendTo("#List_Container");
-
                         $("#Total").text(data.item2);
                         var page_viewList = Paging(data.item2, PageSize, PageRow, PageNo, "List");
                         $("#pageing").empty().html(page_viewList);
                     }
+
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert("유저 접속 리스트 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                    alert("유저 리스트 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
                     console.log(textStatus);
                     console.log(errorThrown);
                     console.log(jqXHR);
@@ -125,25 +131,27 @@
             List(PageNo);
         }
 
-        function ConDel(UserIdx, obj) {
-            if (confirm("삭제하시겠습니까?")) {
+        function MoneyChange(UserIdx) {
+            var chMoney1 = $("#uMoney1_" + UserIdx).val();
+            var chMoney2 = $("#uMoney2_" + UserIdx).val();
+            var chMoney3 = $("#uMoney3_" + UserIdx).val();
+            var chMoney4 = $("#uMoney4_" + UserIdx).val();
+            var chMoney5 = $("#uMoney5_" + UserIdx).val();
+
+            if (confirm("입력한 머니를 반영하시겠습니까? 반영된 머니는 재 접속 후 가능합니다.")) {
                 $.ajax({
-                    url: "/Cmd/SetMemConDel",
+                    url: "/Cmd/SetMemMoneyMultiChange",
                     type: 'POST',
-                    data: { "UserIdx": UserIdx},
+                    data: { "UserIdx": UserIdx, "Money1": chMoney1, "Money2": chMoney2, "Money3": chMoney3, "Money4": chMoney4, "Money5": chMoney5 },
                     success: function (data) {
                         alert(data.rVal);
-                        if (data.rCnt == 0) {
-                            $(obj).parent().remove();
-                        }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        alert("접속유저 삭제 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
+                        alert("유저 머니 변경 Error \n" + textStatus + " : " + errorThrown + "::" + jqXHR);
                     }
                 });
             }
         }
     </script>
 }
-
 

@@ -45,6 +45,31 @@ namespace GhGlobal_Models.Manage
             public int UserGroup { get; set; }
         }
 
+        public partial class gMemberMulti
+        {
+            public int UserIdx { get; set; }
+            public string UserID { get; set; }
+            public byte[] PassWD { get; set; }
+            public string Nick { get; set; }
+            public string RegID { get; set; }
+            public int Avata { get; set; }
+            public int Social { get; set; }
+            public int Gem { get; set; }
+            public double Money1 { get; set; }
+            public double Money2 { get; set; }
+            public double Money3 { get; set; }
+            public double Money4 { get; set; }
+            public double Money5 { get; set; }
+            public string Email { get; set; }
+            public int bonsa { get; set; }
+            public int chongpan { get; set; }
+            public DateTime RegDate { get; set; }
+            public int Block { get; set; }
+            public string kcertCI { get; set; }
+            public DateTime kcertCIDate { get; set; }
+            public int UserGroup { get; set; }
+        }
+
         public partial class spMemParam01
         {
             public int lan_idx { get; set; }

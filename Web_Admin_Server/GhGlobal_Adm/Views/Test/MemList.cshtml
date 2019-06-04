@@ -97,7 +97,7 @@
             }
 
             $.ajax({
-                url: "@ViewBag.ApiUrl/Manage/GetMemList",
+                url: "/Cmd/GetMemList",
                 type: 'POST',
                 data: pData,
                 success: function (data) {
@@ -135,7 +135,7 @@
             if ($.isNumeric(chMoney)) {
                 if (confirm("입력한 머니를 반영하시겠습니까? 반영된 머니는 재 접속 후 가능합니다.")) {
                     $.ajax({
-                        url: "@ViewBag.ApiUrl/Manage/SetMemMoneyChange",
+                        url: "/Cmd/SetMemMoneyOneChange",
                         type: 'POST',
                         data: { "UserIdx": UserIdx, "Money": chMoney },
                         success: function (data) {

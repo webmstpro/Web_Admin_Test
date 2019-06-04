@@ -45,24 +45,6 @@
                         <input type="hidden" name="gNum" id="gNum" value="3" />
                         <input type="hidden" name="Rand" id="Rand" value="0" />
                         <div id="User_Container">
-                            @*<div class="UserCard">
-                                P
-                                <input type="hidden" name="User_0" id="User_0" value="1" />
-                                <input type="hidden" name="User_1" id="User_1" value="2" />
-                                <input type="hidden" name="User_4" id="User_4" value="5" />
-                                <img src="~/images/1.png" class="UserImg" id="UserImg_0" idx="1" UserIdx="0" />
-                                <img src="~/images/1.png" class="UserImg" id="UserImg_1" idx="2" UserIdx="1" />
-                                <img src="~/images/1.png" class="UserImg" id="UserImg_4" idx="4" UserIdx="4" />
-                            </div>
-                            <div class="DealerCard">
-                                B
-                                <input type="hidden" name="User_2" id="User_2" value="3" />
-                                <input type="hidden" name="User_3" id="User_3" value="4" />
-                                <input type="hidden" name="User_5" id="User_5" value="6" />
-                                <img src="~/images/1.png" class="UserImg" id="UserImg_2" idx="3" UserIdx="2" />
-                                <img src="~/images/1.png" class="UserImg" id="UserImg_3" idx="4" UserIdx="3" />
-                                <img src="~/images/1.png" class="UserImg" id="UserImg_5" idx="6" UserIdx="5" />
-                            </div>*@
                         </div>
                     </form>
                 </div>
@@ -95,10 +77,6 @@
 
 @section Scripts{
 <script id="UserCards_Tmpl" type="text/x-tmpl">
-    @*<div class="UserCard">
-            <input type="hidden" name="User" id="User_${userCard}" value="${card}" />
-            <img src="/images/${card}.png" class="UserImg" idx="${card}" UserIdx="${userCard}" />
-        </div>*@
     {{each(i) list}}
     {{if (i % 12) == 0 && i > 0}}
     <br />
@@ -123,7 +101,7 @@
 
         function cardList(gNum) {
             $.ajax({
-                url: "@ViewBag.ApiUrl/CardSet/GetCardList",
+                url: "/Cmd/GetCardList",
                 type: 'POST',
                 data: { "gNum": gNum},
                 success: function (data) {
@@ -166,7 +144,7 @@
 
         function formSubmit() {
             $.ajax({
-                url: "@ViewBag.ApiUrl/CardSet/SetBlackJac",
+                url: "/Cmd/SetBlackJac",
                 type: 'POST',
                 data: $("#holdemForm").serialize(),
                 success: function (data) {
@@ -283,12 +261,6 @@
                 $(this).removeClass("choiceReady");
                 $(this).removeClass("choice");
             });
-
-            //$("input[name^=User_]").each(function () {
-            //    if ($(this).val() != "0") {
-            //        $("#img_" + $(this).val()).addClass("choice");
-            //    }
-            //});
         }
 
     </script>

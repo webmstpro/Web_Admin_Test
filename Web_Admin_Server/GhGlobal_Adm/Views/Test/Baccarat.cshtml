@@ -103,7 +103,7 @@
         function cardList(gNum) {
             //GetCardList
             $.ajax({
-                url: "@ViewBag.ApiUrl/CardSet/GetCardList",
+                url: "/Cmd/GetCardList",
                 type: 'POST',
                 data: { "gNum": gNum},
                 success: function (data) {
@@ -170,7 +170,7 @@
 
         function formSubmit() {
             $.ajax({
-                url: "@ViewBag.ApiUrl/CardSet/SetBaccarat",
+                url: "/Cmd/SetBaccarat",
                 type: 'POST',
                 data: $("#holdemForm").serialize(),
                 success: function (data) {
